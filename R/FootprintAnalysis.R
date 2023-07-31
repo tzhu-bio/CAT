@@ -365,6 +365,16 @@ plotDiffFootprint <- function(samples,cutoff=NA, plot_type=c("Volcano","Bar","Lo
 # }
 
 
+#' Title
+#'
+#' @param motif_file The PWM matrix file.
+#' @param orgdb The orgdb name.
+#' @param tf_family The TF family files. Thee columns are included:Symbol	Ensembl	Family.
+#'
+#' @return
+#' @export
+#'
+#' @examples   getMotif2Gene(motif_file = "jaspar.motif", orgdb = "org.Hs.eg.db", tf_family="tf.family.tsv")
 getMotif2Gene <- function(motif_file, orgdb, tf_family){
   file_lines <- readLines(motif_file)
   header_lines <- grep("^>", file_lines, value = TRUE)
@@ -381,6 +391,19 @@ getMotif2Gene <- function(motif_file, orgdb, tf_family){
 }
 
 
+#' Title
+#'
+#' @param motif2gene The motif to gene annotation file obtained by **getMotif2Gene**.
+#' @param gene_exp The Gene expression matrix.
+#' @param footprint_score The footprint score file obtained by **getFootprintScore**.
+#' @param return_matrix Whether to return matrix.
+#' @param cor_cutoff The correlation cutoff of TF footprint score and TF expression. Default is 0.5.
+#' @param color Color list.
+#'
+#' @return
+#' @export
+#'
+#' @examples  plotFootprintScoreExp(motif2gene=m2g, gene_exp="rsem_exp.tsv", footprint_score = ftscore)
 plotFootprintScoreExp <- function(motif2gene, gene_exp, footprint_score, return_matrix = FALSE, cor_cutoff = 0.5, color){
   motif <- motif2gene
   #rownames(motif) <- motif$output_prefix
