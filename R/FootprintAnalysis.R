@@ -181,23 +181,23 @@ compareFootprints <- function(samples, motif, smooth_window=5, flanking_length=2
 
 
 
-#' Title
+#' Title  plotDiffFootprint
 #'
-#' @param samples
-#' @param cutoff
-#' @param plot_type
-#' @param color
-#' @param save_path
-#' @param file_prefix
-#' @param figure_width
-#' @param figure_height
+#' @param samples  The two sample names to compare.
+#' @param cutoff  The cutoff of change fold. Default is NA.
+#' @param plot_type Plot type. Three types are available: "Volcano","Bar","Lollipop".
+#' @param save_path The path to save PDF file.
+#' @param file_prefix The prefix of PDF file.
+#' @param figure_width Figure width. Default is 8.21.
+#' @param figure_height Figure height. Default is 8.21.
+#' @param scale
 #'
 #' @return
 #' @export
 #'
 #' @examples   plotDiffFootprint(samples=c("NIP_YP1","NIP_YP2"), bindetect_path="/public/workspace/zhutao/encode/CAT",plot_type="Bar",cutoff=0.1)
 #'
-plotDiffFootprint <- function(samples,cutoff=NA, plot_type=c("Volcano","Bar","Lollipop"),color=NA, save_path=NA,
+plotDiffFootprint <- function(samples,cutoff=NA, plot_type=c("Volcano","Bar","Lollipop"),scale = 5, save_path=NA,
                               file_prefix=NA,figure_width=8.21, figure_height=8.21){
   checkFTAnno()
   bindetect <- read.table(sprintf("%s/bindetect_results.txt",FTAnno$bindetect),head=T)
@@ -263,7 +263,7 @@ plotDiffFootprint <- function(samples,cutoff=NA, plot_type=c("Volcano","Bar","Lo
   if(plot_type=="Volcano"){
     options(repr.plot.width = 8, repr.plot.height = 7, repr.plot.res = 100)
     p <- ggplot2::ggplot(data = bindetect, aes(x = change, y = -log10(p), color = sig)) +
-         ggplot2::geom_point(size = abs(bindetect$change)*10) +
+         ggplot2::geom_point(size = abs(bindetect$change)*scale) +
          ggplot2::scale_color_manual(values = c('#C51B7D', '#E0E0E0', '#4D9221'),limits = c(s1, 'n.s.', s2)) +
          ggplot2::labs(x = 'Differential binding score', y = '-log10 adjust p-value',title = sprintf('%s vs. %s',gsub("_Up","",s1),gsub("_Up","",s2)), color = '') +
          ggplot2::theme(plot.title = element_text(hjust = 0.5, size = 14), panel.grid = element_blank(),
@@ -286,7 +286,7 @@ plotDiffFootprint <- function(samples,cutoff=NA, plot_type=c("Volcano","Bar","Lo
     res$score <- -log10(res$p)
     p <- ggplot2::ggplot(res, aes(x=reorder(motif,change), y=change,color=score)) +
          ggplot2::geom_segment( aes(x=reorder(motif,change), xend=motif, y=0, yend=change),color=ifelse(res$change>0,"#FF7F0E","#1F77B4")) +
-         ggplot2::geom_point( size=abs(res$change)*30, alpha=1)+ ggplot2::theme_light() + ggplot2::coord_flip() +
+         ggplot2::geom_point( size=abs(res$change)*scale, alpha=1)+ ggplot2::theme_light() + ggplot2::coord_flip() +
          ggplot2::scale_color_distiller(palette = "Spectral",name="-log10(p)") + ggplot2::theme(plot.title = element_text(hjust = 0.5,size = 16)) +
          ggplot2::ggtitle(sprintf('%s vs. %s',gsub("_Up","",s1),gsub("_Up","",s2)))+
          ggplot2::xlab('') + ggplot2::ylab("Differential binding score")
@@ -365,7 +365,7 @@ plotDiffFootprint <- function(samples,cutoff=NA, plot_type=c("Volcano","Bar","Lo
 # }
 
 
-#' Title
+#' Title  getMotif2Gene
 #'
 #' @param motif_file The PWM matrix file.
 #' @param orgdb The orgdb name.
@@ -391,7 +391,7 @@ getMotif2Gene <- function(motif_file, orgdb, tf_family){
 }
 
 
-#' Title
+#' Title  plotFootprintScoreExp
 #'
 #' @param motif2gene The motif to gene annotation file obtained by **getMotif2Gene**.
 #' @param gene_exp The Gene expression matrix.

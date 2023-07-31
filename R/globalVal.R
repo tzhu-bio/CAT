@@ -26,7 +26,6 @@ addAnnotation <- function(gene_bed, gtf, genome_size) {
 #'
 #' @param corrected_signal The absolute path of **ATACorrect** folder.
 #' @param bindetect_result The absolute path of **BINDetect** folder.
-#' @param bindetect_compare The absolute path of **BINDetect_compare** folder.
 #'
 #' @return
 #' @export
