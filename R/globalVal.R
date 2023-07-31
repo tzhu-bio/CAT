@@ -32,7 +32,7 @@ addAnnotation <- function(gene_bed, gtf, genome_size) {
 #' @export
 #'
 #' @examples
-addFootprint <- function(corrected_signal, bindetect_result, bindetect_compare){
+addFootprint <- function(corrected_signal, bindetect_result){
   FTAnno <- list(corrected_signal, bindetect_result)
   names(FTAnno) <- c("signal", "bindetect")
   assign("FTAnno", FTAnno, envir = .GlobalEnv)
