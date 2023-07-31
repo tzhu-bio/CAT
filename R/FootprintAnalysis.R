@@ -304,67 +304,6 @@ plotDiffFootprint <- function(samples,cutoff=NA, plot_type=c("Volcano","Bar","Lo
 
 
 
-
-# getAllFPD <- function(samples, flanking_length= 50, N_cores = 10){
-#   result <- read.table(sprintf("%s/%s/bindetect_results.txt", FTAnno$bindetect, samples[1]),head = T)
-#   motif_list <- result$output_prefix
-#   all_lst <- lapply(samples, function(sample){
-#     logfile(sprintf("Footprint Depth with %s...", sample))
-#     coverage <- valr::read_bigwig(sprintf("%s/%s_q30_corrected.bw", FTAnno$signal, sample))
-#     all_lst <- list()
-#     #pb <- progress::progress_bar$new(total = length(motif_list))
-#     result_list <- parallel::mcmapply(function(x){
-#       motif_center <- valr::read_bed(sprintf("%s/%s/%s/beds/%s_all.bed", FTAnno$bindetect, sample, x, x), n_fields = 3)
-#       motif_flank <- valr::bed_flank(motif_center, CATAnno$genome, both = flanking_length)
-#       flank_score <- valr::bed_map(motif_flank, coverage, .sum = sum(score))
-#       avg_flank <- sum(flank_score$.sum, na.rm = T) / (flanking_length * 2)
-#       center_score <- valr::bed_map(motif_center, coverage, .sum = sum(score))
-#       motif_center$len <- motif_center$end - motif_center$start
-#       motif_length <- as.integer(unique(motif_center$len))
-#       #avg_center <- sum(center_score$.sum, na.rm = T) / motif_length
-#       bg <- (flank_score + center_score) / (flanking_length * 2 + motif_length)
-#       fpd <- avg_flank - bg
-#       #fpd <- (avg_flank - avg_center) / (avg_flank + avg_center)
-#       #pb$tick()
-#       return(data.frame(Sample = sample, Motif = x, FPD = round(fpd,2)))
-#       }, x = motif_list, mc.cores = N_cores, SIMPLIFY = FALSE)
-#     return(do.call(rbind, result_list))
-#     })
-#   res <- do.call(rbind, all_lst)
-#   ## Remove the value <0
-#   res$FPD <- ifelse(res$FPD>=0, res$FPD, 0)
-#   rownames(res) <- NULL
-#   return(res)
-# }
-#
-#
-# plotAllFPD <- function(FPD_result){
-#   mycolor <- c(paletteer_d("ggthemes::Classic_Cyclic"),rev(paletteer_d("ggthemes::Tableau_20")))
-#   FPD_result$is_annotate <- ifelse(FPD_result$FPD>= 2, "yes", "no")
-#   FPD_result$gene <- sapply(strsplit(FPD_result$Motif,"_"), `[`, 1)
-#   dfcol<-data.frame(x=unique(FPD_result$Sample), y = 0, label=c(1:13))
-#   p <- ggplot2::ggplot(FPD_result, aes(x=Sample, y=FPD)) + #ggplot2::geom_hline(yintercept = -1, linetype="dashed", color = "grey") +
-#        ggplot2::geom_hline(yintercept = 2, linetype="dashed", color = "grey") +
-#        ggplot2::geom_jitter(aes(color=as.factor(Sample)), size = abs(FPD_result$FPD) * 2, width=0.4)+ ggplot2::scale_color_manual(values = paletteer_d("ggthemes::Classic_Cyclic")) +
-#        ggpubr::theme_pubr() + ggplot2::labs(x = "", y = 'Footprint Depth Score') +
-#        ggplot2::geom_label_repel(data=subset(FPD_result, is_annotate=="yes"), aes(label=gene), size=3,label.size=NA, max.overlaps=30,box.padding = 0.4) +
-#        ggplot2::geom_tile(data = dfcol,aes(x=x,y=y), height=0.2,color = "black",fill = mycolor,alpha = 0.8,show.legend = F) +
-#        ggplot2::geom_text(data=dfcol,aes(x=x,y=y,label=x),size =4,color ="white") + ggplot2::theme(panel.border = element_rect(colour = "black", fill=NA)) + guides(fill="none")
-#   return(p)
-# }
-#
-# compareFPD <- function(FPD_result, samples){
-#   fpd1<- FPD_result[FPD_result$Sample %in% c(samples[1], samples[2]),]
-#   wide_matrix <- dcast(fpd1, Motif ~ Sample, value.var = "FPD")
-#   p<- ggplot(wide_matrix, aes(x = "Bulk_B", y = "CD8pos_T")) +
-#   geom_point(color = "steelblue", size = 3) +  # 设置散点的颜色和大小
-#   geom_abline(intercept = 30, slope = -5, linetype = "dashed", color = "darkred") +  # 添加对角线
-#   labs(x = "Weight (1000 lbs)", y = "Miles per Gallon") +  # 设置坐标轴标签
-#   theme_minimal()
-#   ggscatter(wide_matrix, x = "Bulk_B", y = "CD8pos_T")
-# }
-
-
 #' Title  getMotif2Gene
 #'
 #' @param motif_file The PWM matrix file.
@@ -456,3 +395,65 @@ plotFootprintScoreExp <- function(motif2gene, gene_exp, footprint_score, return_
 }
 
 
+
+
+
+
+# getAllFPD <- function(samples, flanking_length= 50, N_cores = 10){
+#   result <- read.table(sprintf("%s/%s/bindetect_results.txt", FTAnno$bindetect, samples[1]),head = T)
+#   motif_list <- result$output_prefix
+#   all_lst <- lapply(samples, function(sample){
+#     logfile(sprintf("Footprint Depth with %s...", sample))
+#     coverage <- valr::read_bigwig(sprintf("%s/%s_q30_corrected.bw", FTAnno$signal, sample))
+#     all_lst <- list()
+#     #pb <- progress::progress_bar$new(total = length(motif_list))
+#     result_list <- parallel::mcmapply(function(x){
+#       motif_center <- valr::read_bed(sprintf("%s/%s/%s/beds/%s_all.bed", FTAnno$bindetect, sample, x, x), n_fields = 3)
+#       motif_flank <- valr::bed_flank(motif_center, CATAnno$genome, both = flanking_length)
+#       flank_score <- valr::bed_map(motif_flank, coverage, .sum = sum(score))
+#       avg_flank <- sum(flank_score$.sum, na.rm = T) / (flanking_length * 2)
+#       center_score <- valr::bed_map(motif_center, coverage, .sum = sum(score))
+#       motif_center$len <- motif_center$end - motif_center$start
+#       motif_length <- as.integer(unique(motif_center$len))
+#       #avg_center <- sum(center_score$.sum, na.rm = T) / motif_length
+#       bg <- (flank_score + center_score) / (flanking_length * 2 + motif_length)
+#       fpd <- avg_flank - bg
+#       #fpd <- (avg_flank - avg_center) / (avg_flank + avg_center)
+#       #pb$tick()
+#       return(data.frame(Sample = sample, Motif = x, FPD = round(fpd,2)))
+#       }, x = motif_list, mc.cores = N_cores, SIMPLIFY = FALSE)
+#     return(do.call(rbind, result_list))
+#     })
+#   res <- do.call(rbind, all_lst)
+#   ## Remove the value <0
+#   res$FPD <- ifelse(res$FPD>=0, res$FPD, 0)
+#   rownames(res) <- NULL
+#   return(res)
+# }
+#
+#
+# plotAllFPD <- function(FPD_result){
+#   mycolor <- c(paletteer_d("ggthemes::Classic_Cyclic"),rev(paletteer_d("ggthemes::Tableau_20")))
+#   FPD_result$is_annotate <- ifelse(FPD_result$FPD>= 2, "yes", "no")
+#   FPD_result$gene <- sapply(strsplit(FPD_result$Motif,"_"), `[`, 1)
+#   dfcol<-data.frame(x=unique(FPD_result$Sample), y = 0, label=c(1:13))
+#   p <- ggplot2::ggplot(FPD_result, aes(x=Sample, y=FPD)) + #ggplot2::geom_hline(yintercept = -1, linetype="dashed", color = "grey") +
+#        ggplot2::geom_hline(yintercept = 2, linetype="dashed", color = "grey") +
+#        ggplot2::geom_jitter(aes(color=as.factor(Sample)), size = abs(FPD_result$FPD) * 2, width=0.4)+ ggplot2::scale_color_manual(values = paletteer_d("ggthemes::Classic_Cyclic")) +
+#        ggpubr::theme_pubr() + ggplot2::labs(x = "", y = 'Footprint Depth Score') +
+#        ggplot2::geom_label_repel(data=subset(FPD_result, is_annotate=="yes"), aes(label=gene), size=3,label.size=NA, max.overlaps=30,box.padding = 0.4) +
+#        ggplot2::geom_tile(data = dfcol,aes(x=x,y=y), height=0.2,color = "black",fill = mycolor,alpha = 0.8,show.legend = F) +
+#        ggplot2::geom_text(data=dfcol,aes(x=x,y=y,label=x),size =4,color ="white") + ggplot2::theme(panel.border = element_rect(colour = "black", fill=NA)) + guides(fill="none")
+#   return(p)
+# }
+#
+# compareFPD <- function(FPD_result, samples){
+#   fpd1<- FPD_result[FPD_result$Sample %in% c(samples[1], samples[2]),]
+#   wide_matrix <- dcast(fpd1, Motif ~ Sample, value.var = "FPD")
+#   p<- ggplot(wide_matrix, aes(x = "Bulk_B", y = "CD8pos_T")) +
+#   geom_point(color = "steelblue", size = 3) +  # 设置散点的颜色和大小
+#   geom_abline(intercept = 30, slope = -5, linetype = "dashed", color = "darkred") +  # 添加对角线
+#   labs(x = "Weight (1000 lbs)", y = "Miles per Gallon") +  # 设置坐标轴标签
+#   theme_minimal()
+#   ggscatter(wide_matrix, x = "Bulk_B", y = "CD8pos_T")
+# }
