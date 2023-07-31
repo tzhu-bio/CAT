@@ -9,5 +9,5 @@ An advanced analysis toolkit for ATAC-seq.
 if (!requireNamespace("devtools", quietly = TRUE)) install.packages("devtools")
 ```
 ``` r
-devtools::install_github("GreenleafLab/ArchR", ref="master", repos = BiocManager::repositories())
+devtools::install_github("tzhu-bio/CAT")
 ```
