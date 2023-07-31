@@ -343,7 +343,7 @@ getMotif2Gene <- function(motif_file, orgdb, tf_family){
 #' @export
 #'
 #' @examples  plotFootprintScoreExp(motif2gene=m2g, gene_exp="rsem_exp.tsv", footprint_score = ftscore)
-plotFootprintScoreExp <- function(motif2gene, gene_exp, footprint_score, return_matrix = FALSE, cor_cutoff = 0.5, color){
+plotFootprintScoreExp <- function(motif2gene, gene_exp, footprint_score, return_matrix = FALSE, cor_cutoff = 0.5, color=NA){
   motif <- motif2gene
   #rownames(motif) <- motif$output_prefix
   #motif <- motif[,2:ncol(motif)]
