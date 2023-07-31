@@ -485,13 +485,13 @@ logfile <- function(msg) {
 }
 
 checkFTAnno <- function(){
-  if (!exists(FTAnno)) {
+  if (!exists("FTAnno")) {
     message(sprintf("Footprint annotation not exist. Please **addFootprint** first."))
   }
 }
 
 checkGeAnno  <- function(){
-  if (!exists(CATAnno)) {
+  if (!exists("CATAnno")) {
     message(sprintf("Necessary Annotation not exist. Please **addAnnotation** first."))
   }
 }
