@@ -20,3 +20,14 @@ if (!requireNamespace("devtools", quietly = TRUE)) install.packages("devtools")
 ``` r
 devtools::install_github("tzhu-bio/CAT")
 ```
+
+## Publication
+Zhu, T., Liao, K., Zhou, R. et al. ATAC-seq with unique molecular identifiers improves quantification and footprinting. *Commun Biol* 3, 675 (2020).
+**DOI:** https://doi.org/10.1038/s42003-020-01403-4
+
+<a href="mailto:tzhubio@gmail.com">
+  <img src="https://github.com/blackcater/blackcater/raw/main/images/social-gmail.svg" height="40" />
+</a>
+
+![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=tzhu-bio&show_icons=true&theme=radical)
+
