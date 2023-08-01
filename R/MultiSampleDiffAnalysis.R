@@ -207,6 +207,7 @@ plotClusterSpecificPeak <- function(specific_peak, zscore_min = -2, zscore_max =
                                     cluster_col=FALSE, color=NA, save_path=NA,
                                     file_prefix=NA,figure_height=14,figure_width=7){
   df1 <- specific_peak[complete.cases(specific_peak), ]
+  df1 <- rowZscores(as.matrix(df1), limit = TRUE)
   row_dend <- hclust(dist(df1))
   mat <- df1[row_dend$order, ]
   group <- data.frame(C=cutree(row_dend, k = as.integer(cluster_N)))
