@@ -248,6 +248,7 @@ plotTimeAll <- function(norm_data, peak2gene, rna_matrix, corr_cutoff = 0.4, lab
 #'
 #' @examples
 plotTimeGene <- function(peak_time, peak2gene, rna_matrix, gene, corr_cutoff = 0.4){
+    peak2gene <- readRDS(peak2gene)
     p2g1 <- peak2gene[peak2gene$correlations >= corr_cutoff, ]
     p2g1 <- p2g1 %>% dplyr::group_by(Peak) %>% dplyr::slice_max(correlations, n=1) %>% as.data.frame()
     p2g1 <- p2g1[!duplicated(p2g1$Peak),]
