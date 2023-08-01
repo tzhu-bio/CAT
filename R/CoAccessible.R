@@ -1,16 +1,15 @@
 #' Title
 #'
-#' @param peak_summit
-#' @param peak_type
-#' @param quant_matrix
-#' @param max_dis
-#' @param window
+#' @param quant_matrix   The normalized matrix obtained by **quantification**.
+#' @param max_dis   The max distance of two peaks to calculate the correlations.
+#' @param window   The window size to shift.
+#' @param peak_anno The merged peaks annotation.
 #'
 #' @return
 #' @export
 #'
-#' @examples
-getCoaccessible <- function(peak_anno, quant_matrix, max_dis, window, nblocks = 2){
+#' @examples   getCoaccessible(peak_anno="peak_anno.txt", quant_matrix="quant_mat.tsv", max_dis=20000, window=20000)
+getCoaccessible <- function(peak_anno, quant_matrix, max_dis, window){
   checkGeAnno()
   anno <- read.table(peak_anno, head=T, sep="\t", stringsAsFactors=FALSE)
   summit <- anno[,-c(4)]
@@ -33,18 +32,18 @@ getCoaccessible <- function(peak_anno, quant_matrix, max_dis, window, nblocks = 
   rownames(mat) <- peaks <- sprintf("%s_%s_%s", mat$chr, mat$bp1, mat$bp2)
 
   ## raw correlation
-  maxn <- floor(nrow(mat)/100) * 10
-  cormat <- bigcor(t(head(mat[,-c(1:3)], n=maxn)), nblocks=nblocks)
-  rawcor <- matrix(0, nrow=nrow(mat), ncol=nrow(mat))
-  rownames(rawcor) <- colnames(rawcor) <- rownames(mat)
-  rawcor[1:maxn, 1:maxn] <- cormat[1:maxn, 1:maxn]
-  if(nrow(mat) > maxn){
-    xcor <- cor(t(mat[(maxn+1):nrow(mat),-c(1:3)]))
-    rawcor[rownames(xcor), colnames(xcor)] <- xcor
-    xcor <- cor(t(mat[(maxn+1):nrow(mat),-c(1:3)]), t(head(mat[,-c(1:3)], n=maxn)))
-    rawcor[rownames(xcor), colnames(xcor)] <- xcor
-    rawcor[colnames(xcor), rownames(xcor)] <- t(xcor)
-  }
+  # maxn <- floor(nrow(mat)/100) * 10
+  # cormat <- bigcor(t(head(mat[,-c(1:3)], n=maxn)), nblocks=nblocks)
+  # rawcor <- matrix(0, nrow=nrow(mat), ncol=nrow(mat))
+  # rownames(rawcor) <- colnames(rawcor) <- rownames(mat)
+  # rawcor[1:maxn, 1:maxn] <- cormat[1:maxn, 1:maxn]
+  # if(nrow(mat) > maxn){
+  #   xcor <- cor(t(mat[(maxn+1):nrow(mat),-c(1:3)]))
+  #   rawcor[rownames(xcor), colnames(xcor)] <- xcor
+  #   xcor <- cor(t(mat[(maxn+1):nrow(mat),-c(1:3)]), t(head(mat[,-c(1:3)], n=maxn)))
+  #   rawcor[rownames(xcor), colnames(xcor)] <- xcor
+  #   rawcor[colnames(xcor), rownames(xcor)] <- t(xcor)
+  # }
 
   ## regularized correlation
   window <- window
