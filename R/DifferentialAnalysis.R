@@ -14,7 +14,7 @@
 #' @examples   diff_peak <- getDiffPeak(data, condition=c("control","exp1"), rep_N = 2, control="control", experment="exp1")
 #'
 getDiffPeak <- function(norm_data, condition, rep_N, control, experment, log2fc=1, padj=0.05){
-  coldata <- data.frame(condition = factor(rep(condition, each = rep), levels = condition))
+  coldata <- data.frame(condition = factor(rep(condition, each = rep_N), levels = condition))
   dds <- DESeq2::DESeqDataSetFromMatrix(countData = round(norm_data), colData = coldata, design= ~condition)
   dds1 <- DESeq2::DESeq(dds, fitType = 'mean', minReplicatesForReplace = 7, parallel = TRUE)
   res <-  DESeq2::results(dds1, contrast = c('condition', experment, control))
@@ -127,8 +127,8 @@ plotMA <- function(target){
 #' @return
 #' @export
 #'
-#' @examples   getTraids(group_name=c("A","B","C"), quant_df = quant_df)
-getTraids <- function(group_name, quant_df, return_matrix = FALSE, point_size=0.1, color = NA){
+#' @examples   getTriads(group_name=c("A","B","C"), quant_df = quant_df)
+getTriads <- function(group_name, quant_df, return_matrix = FALSE, point_size=0.1, color = NA){
   triadpos <- data.frame(A=c(1,0,0,0,0.5,0.5,0.33), B=c(0,1,0,0.5,0,0.5,0.33),C=c(0,0,1,0.5,0.5,0,0.33))
   rownames(triadpos) <- c(sprintf("%s dominant",group_name[1]),
                           sprintf("%s dominant",group_name[2]),
@@ -168,16 +168,16 @@ getTraids <- function(group_name, quant_df, return_matrix = FALSE, point_size=0.
 }
 
 
-#' Title   A function to plot the traids result.
+#' Title   A function to plot the triads result.
 #'
-#' @param traids_data The traids result obtained by **getTraids**.
+#' @param triads_data The triads result obtained by **getTriads**.
 #'
 #' @return
 #' @export
 #'
-#' @examples  plotTraids(traids_data = res)
-plotTraids <- function(traids_data){
-  df <- reshape2::melt(traids_data)
+#' @examples  plotTriads(triads_data = res)
+plotTriads <- function(triads_data){
+  df <- reshape2::melt(triads_data)
   df$value <- log2(df$value + 1)
   p <- ggpubr::ggboxplot(df, x = "group", y = "value", fill = "variable", palette = c("#00AFBB", "#E7B800", "#FC4E07"))+
        ggplot2::theme(axis.text.x = element_text(angle = 30, vjust = 0.5, hjust=1)) + ggplot2::xlab("") + ggplot2::ylab("log2 (CPM + 1)")
@@ -185,19 +185,19 @@ plotTraids <- function(traids_data){
 }
 
 
-#' Title A function to get the target genes of traids peak.
+#' Title A function to get the target genes of triads peak.
 #'
-#' @param traids_data The traids result obtained by **getTraids**.
+#' @param triads_data The triads result obtained by **getTriads**.
 #' @param save_path The path to save the result.
 #' @param file_prefix The prefix of the file.
 #'
 #' @return
 #' @export
 #'
-#' @examples   getTraidsTargetGenes(traids_data = res)
-getTraidsTargetGenes <- function(traids_data, save_path=NA, file_prefix=NA){
+#' @examples   getTriadsTargetGenes(triads_data = res)
+getTriadsTargetGenes <- function(triads_data, save_path=NA, file_prefix=NA){
   checkGeAnno()
-  diff_peak <- traids_data
+  diff_peak <- triads_data
   diff_peak$chrom <- sapply(strsplit(rownames(diff_peak),":"), `[`, 1)
   diff_peak$start1 <- sapply(strsplit(rownames(diff_peak),":"), `[`, 2)
   diff_peak <- diff_peak %>% tidyr::separate(start1, c("start", "end"), "-")
