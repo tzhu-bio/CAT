@@ -23,7 +23,7 @@ annoPeaks <- function(peak_path, sample, peak_suffix, annoDb_name, plot_percent=
   peak_files <- unlist(lst)
   txdb <- GenomicFeatures::makeTxDbFromGFF(CATAnno$gtf)
   suppressMessages({
-  peak_annot_list <- lapply(lst, function(x) ChIPseeker::annotatePeak(x, TxDb = txdb, annoDb = annoDb_name))
+  peak_annot_list <- lapply(lst, function(x) ChIPseeker::annotatePeak(x, TxDb = txdb, annoDb = annoDb_name, verbose=FALSE))
   })
   names(peak_annot_list) <- names(peak_files)
   peak_annot_summary_list <- lapply(peak_annot_list, function(x) {
