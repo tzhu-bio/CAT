@@ -1,4 +1,14 @@
 
+#' Title  getJasparMotifs2018
+#'
+#' @param species Spices.
+#' @param collection Collection type.
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples  getJasparMotifs2018(species = "Homo sapiens", collection = "CORE")
 getJasparMotifs2018 <- function(species = "Homo sapiens", collection = "CORE", ...) {
   opts <- list()
   opts["species"] <- species
