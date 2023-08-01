@@ -1,5 +1,5 @@
 # CAT
-![image]( https://github.com/tzhu-bio/CAT/blob/master/CAT.png)
+![image](https://github.com/tzhu-bio/CAT/blob/main/png/CAT.png)
 An advanced analysis toolkit for ATAC-seq.
 
 [![Build Status](https://travis-ci.org/username/MyPackage.svg?branch=master)](https://travis-ci.org/tzhu-bio/CAT)
