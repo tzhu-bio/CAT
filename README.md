@@ -6,7 +6,6 @@ An advanced analysis toolkit for ATAC-seq.
 <img alt="Documentation" src="https://img.shields.io/badge/Documentation%3F-yes-brightgreen.svg?color=3366CC" target="_blank" /></a>
 <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg?color=DC3912" target="_blank" /> </a>
 <img alt="Published" src="https://img.shields.io/badge/Published%3F-yes-green.svg?color=FF9900" target="_blank" /> </a>
-![Visitor count](https://shields-io-visitor-counter.herokuapp.com/badge?page=tzhu-bio.CAT) </a>
 [![Last-changedate](https://img.shields.io/badge/last%20change-2023--04--27-green.svg)](https://github.com/tzhu-bio/CAT/commits/master)
 
 <div align="center">
