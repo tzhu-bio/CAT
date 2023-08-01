@@ -34,7 +34,7 @@ orderMatrix <- function(mat){
 
 #' Title
 #'
-#' @param norm_data Input normalized data with **quantification**.
+#' @param norm_data Input the normalized dynamic matrix.
 #' @param Palette Providing the custom Palette from the https://r-charts.com/color-palettes/.
 #'
 #' @return
@@ -169,6 +169,20 @@ getTimeGene <- function(peak_time, peak2gene, rna_matrix, corr_cutoff = 0.4){
 }
 
 
+#' Title
+#'
+#' @param norm_data Input the normalized dynamic matrix.
+#' @param peak2gene The peak2gene RDS file obtained by **getPeak2Gene**.
+#' @param rna_matrix The RNA expression matrix.
+#' @param corr_cutoff The cutoff of correlation to get the reliable Peak2gene links.
+#' @param label The label annotation file.
+#' @param ATAC_Palette Color for ATAC heatmap.
+#' @param RNA_Palette Color for RNA heatmap.
+#'
+#' @return
+#' @export
+#'
+#' @examples  plotTimeAll(norm_data = "dynamic_ocrs.tsv", peak2gene = "F:/CAT/example/All_Peak2Gene_links.rds" , rna_matrix = "RSEM_matrix.tsv")
 plotTimeAll <- function(norm_data, peak2gene, rna_matrix, corr_cutoff = 0.4, label = NA, ATAC_Palette = NA, RNA_Palette = NA){
   logfile("Calculating ATAC time...")
   atac <- getTimeATAC(norm_data, return_matrix = TRUE)
