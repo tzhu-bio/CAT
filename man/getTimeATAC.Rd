@@ -7,7 +7,7 @@
 getTimeATAC(norm_data, Palette = NA, return_matrix = FALSE)
 }
 \arguments{
-\item{norm_data}{Input normalized data with **quantification**.}
+\item{norm_data}{Input the normalized dynamic matrix.}
 
 \item{Palette}{Providing the custom Palette from the https://r-charts.com/color-palettes/.}
 }
