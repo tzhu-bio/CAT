@@ -4,14 +4,12 @@
 \alias{addFootprint}
 \title{Title  A function to add necessary annotation for foorprinting analysis.}
 \usage{
-addFootprint(corrected_signal, bindetect_result, bindetect_compare)
+addFootprint(corrected_signal, bindetect_result)
 }
 \arguments{
 \item{corrected_signal}{The absolute path of **ATACorrect** folder.}
 
 \item{bindetect_result}{The absolute path of **BINDetect** folder.}
-
-\item{bindetect_compare}{The absolute path of **BINDetect_compare** folder.}
 }
 \description{
 Title  A function to add necessary annotation for foorprinting analysis.

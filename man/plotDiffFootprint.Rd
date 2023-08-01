@@ -2,13 +2,13 @@
 % Please edit documentation in R/FootprintAnalysis.R
 \name{plotDiffFootprint}
 \alias{plotDiffFootprint}
-\title{Title}
+\title{Title  plotDiffFootprint}
 \usage{
 plotDiffFootprint(
   samples,
   cutoff = NA,
   plot_type = c("Volcano", "Bar", "Lollipop"),
-  color = NA,
+  scale = 5,
   save_path = NA,
   file_prefix = NA,
   figure_width = 8.21,
@@ -16,10 +16,24 @@ plotDiffFootprint(
 )
 }
 \arguments{
-\item{figure_height}{}
+\item{samples}{The two sample names to compare.}
+
+\item{cutoff}{The cutoff of change fold. Default is NA.}
+
+\item{plot_type}{Plot type. Three types are available: "Volcano","Bar","Lollipop".}
+
+\item{scale}{}
+
+\item{save_path}{The path to save PDF file.}
+
+\item{file_prefix}{The prefix of PDF file.}
+
+\item{figure_width}{Figure width. Default is 8.21.}
+
+\item{figure_height}{Figure height. Default is 8.21.}
 }
 \description{
-Title
+Title  plotDiffFootprint
 }
 \examples{
   plotDiffFootprint(samples=c("NIP_YP1","NIP_YP2"), bindetect_path="/public/workspace/zhutao/encode/CAT",plot_type="Bar",cutoff=0.1)
