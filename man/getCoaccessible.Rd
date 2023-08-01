@@ -4,11 +4,20 @@
 \alias{getCoaccessible}
 \title{Title}
 \usage{
-getCoaccessible(peak_anno, quant_matrix, max_dis, window, nblocks = 2)
+getCoaccessible(peak_anno, quant_matrix, max_dis, window)
 }
 \arguments{
-\item{window}{}
+\item{peak_anno}{The merged peaks annotation.}
+
+\item{quant_matrix}{The normalized matrix obtained by **quantification**.}
+
+\item{max_dis}{The max distance of two peaks to calculate the correlations.}
+
+\item{window}{The window size to shift.}
 }
 \description{
 Title
+}
+\examples{
+  getCoaccessible(peak_anno="peak_anno.txt", quant_matrix="quant_mat.tsv", max_dis=20000, window=20000)
 }
