@@ -1,5 +1,4 @@
 # CAT
-An advanced analysis toolkit for ATAC-seq.
 
 [![Build Status](https://travis-ci.org/username/MyPackage.svg?branch=master)](https://travis-ci.org/tzhu-bio/CAT)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/MyPackage)](https://cran.r-project.org/package=CAT)
@@ -11,7 +10,7 @@ An advanced analysis toolkit for ATAC-seq.
 ![image](https://github.com/tzhu-bio/CAT/blob/main/png/CAT.png)
 
 <div align="center">
-    <a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Roboto+Slab&color=%237E3ACE&size=30&center=true&vCenter=true&width=750&lines=Chromatin Accessibility Toolkit(CAT)" alt="Computer Engineering Student, Brazilian front-end developer, Power Metal lover"></a>
+    <a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Roboto+Slab&color=%237E3ACE&size=30&center=true&vCenter=true&width=750&lines=An advanced analysis toolkit for ATAC-seq." alt="Computer Engineering Student, Brazilian front-end developer, Power Metal lover"></a>
 </div>
 
 # Chromatin Accessibility Toolkit (CAT)
