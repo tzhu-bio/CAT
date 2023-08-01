@@ -181,8 +181,8 @@ calPairwise <- function(bed_list, picture=T, method='pie', color="Blues",  tl_co
   rownames(result_mat) <- names
 
   if(picture){
-    plot <- corrplot::corrplot(result_mat, method=method, type='full', diag = FALSE, col.lim=c(0,1), col=corrplot::COL1(color),  tl.col= tl_col)
-    return(plot)
+    corrplot::corrplot(result_mat, method=method, type='full', diag = FALSE, col.lim=c(0,1), col=corrplot::COL1(color),  tl.col= tl_col)
+    return()
   }else{
     return(result_mat)
   }
