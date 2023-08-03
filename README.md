@@ -16,7 +16,7 @@
 # Chromatin Accessibility Toolkit (CAT)
 ![image](https://github.com/tzhu-bio/CAT/blob/main/png/cat_compare.png)
 
-![image](https://github.com/tzhu-bio/CAT/blob/main/png/workflow.png)
+![image](https://github.com/tzhu-bio/CAT/blob/main/png/workflow.jpg)
 ``` r
 if (!requireNamespace("devtools", quietly = TRUE)) install.packages("devtools")
 ```
