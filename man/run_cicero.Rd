@@ -7,7 +7,7 @@
 run_cicero(
   indata,
   genomic_coords,
-  window = 45000,
+  window = 5e+05,
   silent = FALSE,
   sample_num = 100
 )

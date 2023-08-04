@@ -8,7 +8,7 @@ generate_cicero_models(
   indata,
   distance_parameter,
   s = 0.75,
-  window = 45000,
+  window = 5e+05,
   max_elements = 200,
   genomic_coords = NULL
 )
