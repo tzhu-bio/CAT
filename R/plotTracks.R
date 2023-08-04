@@ -60,7 +60,7 @@ plotTracks <-  function(samples_path, samples_suffix, chr, start, end, peaks, co
       )
       peakvis <- bedVis(bdFile = peaks,
                         chr = chr, region.min = start, region.max = end, fill = "#006BA4", show.legend=F)
-      ptrack %>% insert_bottom(peakvis,height = 0.03)%>% insert_bottom(trans,height = 0.08)
+      ptrack %>% aplot::insert_bottom(peakvis,height = 0.03) %>% aplot::insert_bottom(trans,height = 0.08)
     }
   }
   else{
@@ -99,7 +99,7 @@ plotTracks <-  function(samples_path, samples_suffix, chr, start, end, peaks, co
     peakvis <- bedVis(bdFile = peaks,
                       chr = chr, region.min = start, region.max = end, fill = "#006BA4", show.legend=F)
 
-    ptrack %>% insert_bottom(peakvis,height = 0.03)%>% insert_bottom(trans,height = 0.08)
+    ptrack %>% aplot::insert_bottom(peakvis,height = 0.03)%>% aplot::insert_bottom(trans,height = 0.08)
   }
 }
 
@@ -128,16 +128,15 @@ plotTracks <-  function(samples_path, samples_suffix, chr, start, end, peaks, co
 plotCoTracks <-  function(samples_path, samples_suffix, chr, start, end,
                           peaks, colist, coaccess_cutoff=0.4,line_size=0.8, curvature = 0.3, color=NA, back.color=TRUE){
   checkGeAnno()
-  link <- read.table(colist,head=T)
-  link$chr <- sapply(strsplit(link$Peak1,"_"), `[`, 1)
+  link <- readRDS(colist)
+  link$chr <- sapply(strsplit(link$Peak1,":"), `[`, 1)
   link <- link[,c("chr","Center1","Center2","coaccess")]
   colnames(link) <- c("chr","start","end","coaccess")
   link$coaccess <- round(link$coaccess,2)
   link_filter <- link[abs(link$coaccess)>=coaccess_cutoff & link$chr==chr & link$start>= start & link$end <= end, ]
   if(nrow(link_filter)==0){
-    print("Your provide region without significant co-accessible peaks")
+    print("Your provide region without significant co-accessible links.")
   }
-  else{
     plink <- linkVis(linkData = link_filter,
                      start = "start",
                      end = "end",
@@ -149,7 +148,6 @@ plotCoTracks <-  function(samples_path, samples_suffix, chr, start, end,
                      xAixs.info = FALSE)
 
     bwlist <- list()
-    setwd(samples_path)
     for (bw in Sys.glob(sprintf("%s/*%s",samples_path, samples_suffix))){
       bwlist[[length(bwlist) + 1]] <- bw
     }
@@ -186,12 +184,12 @@ plotCoTracks <-  function(samples_path, samples_suffix, chr, start, end,
                               relTextDist = 0.4,
                               exonWidth = 0.3,
                               collapse = F,
-                              selecType = "lt"
+                              selecType = "lt",
         )
         peakvis <- bedVis(bdFile = peaks,
                           chr = chr, region.min = start, region.max = end, fill = "#006BA4", show.legend=F)
 
-        ptrack %>% insert_bottom(peakvis,height = 0.03)%>% insert_bottom(plink,height = 0.1) %>% insert_bottom(trans,height = 0.08)
+        ptrack %>% aplot::insert_bottom(peakvis,height = 0.03)%>% aplot::insert_bottom(plink,height = 0.06*max(abs(link$coaccess))) %>% aplot::insert_bottom(trans,height = 0.08)
       }
     }
     else{
@@ -230,10 +228,9 @@ plotCoTracks <-  function(samples_path, samples_suffix, chr, start, end,
       peakvis <- bedVis(bdFile = peaks,
                         chr = chr, region.min = start, region.max = end, fill = "#006BA4", show.legend=F)
 
-      ptrack %>% insert_bottom(peakvis,height = 0.03)%>% insert_bottom(plink,height = 0.1) %>% insert_bottom(trans,height = 0.08)
+      ptrack %>% aplot::insert_bottom(peakvis,height = 0.03)%>% aplot::insert_bottom(plink,height = 0.06*max(abs(link$coaccess))) %>% aplot::insert_bottom(trans,height = 0.08)
     }
   }
-}
 
 
 ##############################################################################
@@ -253,7 +250,7 @@ getGeneBed <- function(gene_name, left = 10000, right = 10000){
   geneBed <- CATAnno$gene
   geneBed <- geneBed[geneBed$name== gene_name, ]
   genome <- CATAnno$genome
-  geneFlank <- bed_slop(geneBed, genome, left = left, right = right)
+  geneFlank <- valr::bed_slop(geneBed, genome, left = left, right = right)
   chr <- geneFlank$chrom
   start <- geneFlank$start
   end <- geneFlank$end
@@ -309,7 +306,7 @@ plotGeneTracks <- function(samples_path, samples_suffix, gene_name, left = 10000
 plotCoGeneTracks <- function(samples_path, samples_suffix, gene_name, left = 30000, right = 30000,
                              peaks, colist, coaccess_cutoff=0.4,line_size=0.8, curvature = 0.3, color=NA, back.color=TRUE){
   coords <- getGeneBed(gene_name = gene_name, left = left, right = right)
-  p <- plotTracks(samples_path = samples_path, chr = coords[1], start = as.integer(coords[2]), end = as.integer(coords[3]),
+  p <- plotCoTracks(samples_path = samples_path, chr = coords[1], start = as.integer(coords[2]), end = as.integer(coords[3]),
                   samples_suffix = samples_suffix, peaks = peaks, color = color,back.color = back.color,colist=colist, coaccess_cutoff=coaccess_cutoff,line_size=line_size, curvature = curvature)
   return(p)
 }

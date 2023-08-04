@@ -405,71 +405,6 @@ bigcor <- function(x, nblocks = 10, verbose = TRUE, ...){
   return(corMAT)
 }
 
-## R code - plot LD decay and heatmap
-## Simple R code to plot LD decay and heatmap
-################################################# https://fabiomarroni.wordpress.com/2011/08/09/estimate-decay-of-linkage-disequilibrium-with-distance/
-Er <- function(C_, d, n){
-  length(d)
-  res <- ((10+C_*d)/((2+C_*d)*(11+C_*d)))*(1+((3+C_*d)*(12+12*C_*d+(C_*d)^2)/(n*(2+C_*d)*(11+C_*d))))
-  return(res)
-}
-
-LDit <- function(x, n, ...){
-  d <- x$Dist;
-  y <- x[order(d), ]
-  ld <- y$rsq
-
-  ## quartz()
-  # plot(d[order(d)], ld, cex=.5, pch=19, col="grey", xlab="Distance", ylab=expression(r^2), ...)
-  plot(0, type='n', xlim=c(0, max(d)), ylim=c(0, 1), xlab="Distance (Kb)", ylab=expression(r^2), ...)
-  nlm <- nls(ld~Er(C_, d[order(d)], n), start=list(C_=0.01))
-  C_ <- summary(nlm)$coefficients[1]
-  lines(d[order(d)], Er(C_, d[order(d)], n), col="black", lwd=2)
-  abline(h=0.1, col='red', lty=5)
-  ## quartz()
-  require(lattice)
-  row_bp <- unique(x$Si)
-  col_bp <- unique(x$Sj)
-  segsites <- length(row_bp)+1
-  vlen <- length(x$rsq)
-  #cm <- matrix(nrow=segsites, ncol=segsites, dimnames=list(c(row_bp, col_bp[segsites-1]), col_bp))#
-  cm <- matrix(nrow=segsites, ncol=segsites, dimnames=list(c(row_bp, col_bp[segsites-1]), c(row_bp[1], col_bp)))
-  count <- 0;
-  nrows <- segsites-1;
-  for(r in 1:nrows){
-    start <- r+1
-    for(c in start:segsites){
-      count <- count+1
-      cm[r, c] <- x$rsq[count]
-    }
-  }
-  levelplot(cm, at=c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1), col.regions=rev(grey.colors(10)),
-            scales=list(cex=.4, x=list(cex=.4), tck=c(1, 0), alternating=c(1)), ylab="", xlab="")
-}
-
-LDplot <- function(x, n, ...){
-  d <- x$Dist;
-  od <- order(d)
-  y <- x[od, ]
-  ld <- y$rsq
-
-  plot(0, type='n', xlim=c(0, max(d)), ylim=c(0, 1), ...)
-  nlm <- nls(ld~Er(C_, d[od], n), start=list(C_=0.01))
-  C_ <- summary(nlm)$coefficients[1]
-  fit <- Er(C_, d[od], n)
-  lines(d[od], fit, col="black", lwd=2)
-  abline(h=0.2, col='red', lty=5)
-  r0.1 <- d[od][order(abs(fit-0.1))[1]]
-  r0.2 <- d[od][order(abs(fit-0.2))[1]]
-  r0.3 <- d[od][order(abs(fit-0.3))[1]]
-  r0.4 <- d[od][order(abs(fit-0.4))[1]]
-  r0.5 <- d[od][order(abs(fit-0.5))[1]]
-  res <- c(r0.1, r0.2, r0.3, r0.4, r0.5)
-  text(res, seq(0.1, 0.5, by=0.1), res, col='red', cex=0.8)
-  segments(res, rep(0, 5), res, seq(0.1, 0.5, by=0.1), col='red', lty=5)
-  return(res)
-}
-
 
 #' Title  Message a timestamp.
 #'
@@ -484,15 +419,47 @@ logfile <- function(msg) {
   message(paste(timestamp, msg))
 }
 
+#' Title  Check for the presence of footprint annotation files.
+#'
+#' @return
+#' @export
+#'
+#' @examples
 checkFTAnno <- function(){
   if (!exists("FTAnno")) {
     stop("Footprint annotation not exist. Please **addFootprint** first.")
   }
 }
 
+#' Title  Check for the presence of genome annotation files.
+#'
+#' @return
+#' @export
+#'
+#' @examples
 checkGeAnno  <- function(){
   if (!exists("CATAnno")) {
     stop("Necessary Annotation not exist. Please **addAnnotation** first.")
   }
 }
 
+
+#' Title  Order the character.
+#'
+#' @param x  A vertor contains characters and numbers.
+#'
+#' @return
+#' @export
+#'
+#' @examples  custom_order(x)
+custom_order <- function(x) {
+  is_number <- grepl("^\\d+$", x)
+
+  numbers <- x[is_number]
+  letters <- x[!is_number]
+  sorted_numbers <- sort(as.numeric(numbers))
+  sorted_letters <- sort(letters)
+
+  sorted_x <- c(as.character(sorted_numbers), sorted_letters)
+  return(sorted_x)
+}

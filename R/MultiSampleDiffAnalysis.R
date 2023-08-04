@@ -207,9 +207,9 @@ plotClusterSpecificPeak <- function(specific_peak, zscore_min = -2, zscore_max =
                                     cluster_col=FALSE, color=NA, save_path=NA,
                                     file_prefix=NA,figure_height=14,figure_width=7){
   df1 <- specific_peak[complete.cases(specific_peak), ]
-  df1 <- rowZscores(as.matrix(df1), limit = TRUE)
+  df1 <- rowZscores(as.matrix(df1), limit = TRUE, min = zscore_min, max = zscore_max) %>% as.data.frame()
   row_dend <- hclust(dist(df1))
-  mat <- df1[row_dend$order, ]
+  #mat <- df1[row_dend$order, ]
   group <- data.frame(C=cutree(row_dend, k = as.integer(cluster_N)))
   group$Cluster <- paste0("Cluster",group$C)
   group <- group[order(group$Cluster),]
@@ -240,7 +240,7 @@ plotClusterSpecificPeak <- function(specific_peak, zscore_min = -2, zscore_max =
   # annotation <- annotation[complete.cases(annotation), ]
   # gcols <- setNames(as.character(paletteer::paletteer_d("ggthemes::Tableau_20"))[1:cluster_N], unique(group$Cluster))
   # gcol <- list(Cluster = gcols)
-  p3 <- ComplexHeatmap::pheatmap(mat, show_rownames = F, cluster_row = F, cluster_col = T, border_color = NA,
+  p3 <- ComplexHeatmap::pheatmap(as.matrix(mat), show_rownames = F, cluster_row = F, cluster_col = T, border_color = NA,
                                  use_raster = F, annotation_colors = gcol,
                                  annotation_row = group, gaps_row = cumsum(as.numeric(table(group$Cluster)))[1:(cluster_N-1)],
                                  color =colorRampPalette(blueYellow)(256), annotation_names_row=F,name="ATAC Z-score")

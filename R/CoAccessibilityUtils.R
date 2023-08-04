@@ -9,7 +9,6 @@
 #' @export
 #'
 #' @examples
-#'
 generate_windows <- function(win, genomic_coords) {
   if(!is(genomic_coords, "data.frame")) {
     chr_maxes <- read.table(genomic_coords)
@@ -28,30 +27,10 @@ generate_windows <- function(win, genomic_coords) {
   return(gr)
 }
 
-
-#' Title
-#'
-#' @param dat
-#'
-#' @return
-#' @export
-#'
-#' @examples
 get_vals <- function(dat){
   dat[, !(colnames(dat) %in% c('chr','bp1','bp2','summit','mean_bp'))]
 }
 
-
-#' Title
-#'
-#' @param grs
-#' @param indata
-#' @param win
-#'
-#' @return
-#' @export
-#'
-#' @examples
 get_genomic_range <- function(grs, indata, win) {
   end1 <- as.numeric(as.character(GenomicRanges::end(grs[win])))
   end2 <- as.numeric(as.character(GenomicRanges::start(grs[win])))
@@ -59,10 +38,12 @@ get_genomic_range <- function(grs, indata, win) {
                          indata$bp1 > end2) |
                         (indata$bp2 < end1 &
                            indata$bp2 > end2), ]
+  # win_range <-
+  #   win_range[as.character(win_range$chr) ==
+  #               gsub("chr", "",
+  #                    as.character(GenomicRanges::seqnames(grs[win]))),]
   win_range <-
-    win_range[as.character(win_range$chr) ==
-                gsub("chr", "",
-                     as.character(GenomicRanges::seqnames(grs[win]))),]
+    win_range[as.character(win_range$chr) == as.character(GenomicRanges::seqnames(grs[win])),]
   win_range$mean_bp <-
     (as.numeric(as.character(win_range$bp1)) +
        as.numeric(as.character(win_range$bp2)))/2
@@ -89,20 +70,6 @@ get_rho_mat <- function(dist_matrix, distance_parameter, s) {
   return(out)
 }
 
-#' Title
-#'
-#' @param dist_mat
-#' @param gene_range
-#' @param maxit
-#' @param null_rho
-#' @param s
-#' @param distance_constraint
-#' @param distance_parameter_convergence
-#'
-#' @return
-#' @export
-#'
-#' @examples
 find_distance_parameter <- function(dist_mat,
                                     gene_range,
                                     maxit,
@@ -111,7 +78,7 @@ find_distance_parameter <- function(dist_mat,
                                     distance_constraint,
                                     distance_parameter_convergence) {
   if (sum(dist_mat > distance_constraint)/2 < 1) {
-    warning("No long edges")
+    #warning("No long edges")
     return("No long edges")
   }
 
@@ -177,7 +144,7 @@ calc_dist_matrix <- function(gene_range) {
   return(dist_mat)
 }
 
-##
+
 #' Title
 #'
 #' @param indata
@@ -194,13 +161,12 @@ calc_dist_matrix <- function(gene_range) {
 #' @export
 #'
 #' @examples
-#'
 estimate_distance_parameter <- function(indata,
-                                        window=45000,
+                                        window=window,
                                         maxit=100,
                                         s=0.75,
                                         sample_num = 100,
-                                        distance_constraint = 20000,
+                                        distance_constraint = 250000,
                                         distance_parameter_convergence = 1e-22,
                                         max_elements = 200,
                                         genomic_coords = NULL) {
@@ -234,17 +200,16 @@ estimate_distance_parameter <- function(indata,
                                                   null_rho = 0,
                                                   s,
                                                   distance_constraint = distance_constraint,
-                                                  distance_parameter_convergence =
-                                                    distance_parameter_convergence)
+                                                  distance_parameter_convergence = distance_parameter_convergence)
 
     if (!is(distance_parameter, "numeric")) next()
     distance_parameters = c(distance_parameters, distance_parameter)
     distance_parameters_calced <- distance_parameters_calced + 1
   }
 
-  if(length(distance_parameters) < sample_num)
-    warning(paste("Could not calculate sample_num distance_parameters - see",
-                  "documentation details", collapse = " "))
+  #if(length(distance_parameters) < sample_num)
+    #warning(paste("Could not calculate sample_num distance_parameters - see",
+    #              "documentation details", collapse = " "))
   if(length(distance_parameters) == 0)
     stop("No distance_parameters calculated")
 
@@ -267,7 +232,7 @@ estimate_distance_parameter <- function(indata,
 generate_cicero_models <- function(indata,
                                    distance_parameter,
                                    s = 0.75,
-                                   window = 45000,
+                                   window = 500000,
                                    max_elements = 200,
                                    genomic_coords = NULL) {
 
@@ -281,11 +246,11 @@ generate_cicero_models <- function(indata,
     win_range <- get_genomic_range(grs, indata, win)
 
     if (nrow(win_range)<=1) {
-      warning("Zero or one element in range")
+      #warning("Zero or one element in range")
       return("Zero or one element in range")
     }
     if (nrow(win_range) > max_elements) {
-      warning("Too many elements in range")
+      #warning("Too many elements in range")
       return("Too many elements in range")
     }
 
@@ -349,14 +314,15 @@ assemble_connections <- function(cicero_model_list, silent = FALSE) {
 
   cors <- lapply(gl_only, function(gl)  {
     cors <- stats::cov2cor(gl$w)
-    data.table::melt(cors)
+    data.table::melt(data.table::as.data.table(cors, keep.rownames=TRUE),
+                     measure=patterns("[0-9]"))
   })
 
   cors <- data.table::rbindlist(cors)
+  names(cors) <- c("Var1", "Var2", "value")
   data.table::setkey(cors, "Var1", "Var2")
 
-  cors_rec <- as.data.frame(cors[,list(mean_coaccess = reconcile(value)),
-                                 by="Var1,Var2"])
+  cors_rec <- cors #as.data.frame(cors[,list(mean_coaccess = reconcile(value)), by="Var1,Var2"])
 
   names(cors_rec) <- c("Peak1", "Peak2", "coaccess")
   cors_rec <- cors_rec[cors_rec$Peak1 != cors_rec$Peak2,]
@@ -377,32 +343,32 @@ assemble_connections <- function(cicero_model_list, silent = FALSE) {
 #' @examples
 run_cicero <- function(indata,
                        genomic_coords,
-                       window = 45000,
+                       window = 500000,
                        silent=FALSE,
                        sample_num = 100) {
   # Check input
   assertthat::assert_that(is(genomic_coords, 'data.frame'))
 
-  if (!silent) print("Starting ...")
-  if (!silent) print("Calculating distance_parameter value")
+  #if (!silent) logfile("Starting ...")
+  #if (!silent) logfile("Calculating distance_parameter value")
   distance_parameters <- estimate_distance_parameter(indata, window=window,
                                                      maxit=100, sample_num = sample_num,
-                                                     distance_constraint = 20000,
+                                                     distance_constraint = 250000,
                                                      distance_parameter_convergence = 1e-22,
                                                      genomic_coords = genomic_coords)
 
   mean_distance_parameter <- mean(unlist(distance_parameters))
 
-  if (!silent) print("Running models")
+  #if (!silent) logfile("Running models")
   cicero_out <-
     generate_cicero_models(indata,
                            distance_parameter = mean_distance_parameter,
                            window = window,
                            genomic_coords = genomic_coords)
-
-  if (!silent) print("Assembling connections")
+  #return(cicero_out)
+  #logfile("Assembling connections")
   all_cons <- assemble_connections(cicero_out, silent=TRUE)
 
-  if (!silent) print("Done")
-  all_cons
+  #logfile("Done")
+  return(all_cons)
 }

@@ -105,7 +105,7 @@ getPeak2Gene <- function(atac_matrix, rna_matrix, peak_annotation,
 #' @param cor_cutoff  Pearson's correlation coefficient threshold for determining significance Peak2Gene links.
 #' @param atac_matrix The normalized ATAC-seq data frame obtained by **quantification**. Same as **getPeak2Gene** parameter.
 #' @param rna_matrix The normalized RNA-seq data frame. Same as **getPeak2Gene** parameter.
-#' @param row_km Clustering rows into N modules.
+#' @param cluster_N Clustering rows into N modules.
 #' @param palATAC The color of ATAC heatmap.
 #' @param palRNA The color of RNA heatmap.
 #' @param save_path The path to save result.
@@ -117,7 +117,7 @@ getPeak2Gene <- function(atac_matrix, rna_matrix, peak_annotation,
 #'
 #' @examples   plotP2GHeatmap("./P2G_all_links.rds",cor_cutoff=0.4,atac_matrix="./ATAC_norm_quant.tsv",rna_matrix="./RNA_norm_quant.tsv",save_path="./")
 #'
-plotP2GHeatmap <- function(p2g_res, cor_cutoff, atac_matrix, rna_matrix, row_km =4, raster = F,
+plotP2GHeatmap <- function(p2g_res, cor_cutoff, atac_matrix, rna_matrix, cluster_N =4, raster = F,
                            palATAC = NA, palRNA= NA, save_path=NA, fig_width=12,fig_height=12){
   checkGeAnno()
   blueYellow <- c("1"="#352A86","2"="#343DAE","3"="#0262E0","4"="#1389D2","5"="#2DB7A3","6"="#A5BE6A","7"="#F8BA43","8"="#F6DA23","9"="#F8FA0D")
@@ -136,38 +136,38 @@ plotP2GHeatmap <- function(p2g_res, cor_cutoff, atac_matrix, rna_matrix, row_km 
   rownames(atac_mat) <- atac_mat$idx_atac
   atac_mat <- atac_mat[,-c(1,2)]
   atac_scale <- rowZscores(as.matrix(atac_mat),limit=T)
-  set.seed(123)
-  matr <- atac_scale
-  p <- pheatmap(matr, show_rownames=F, row_km = row_km)
-  p2 = draw(p)
-  r.dend <- row_dend(p2) #If needed, extract row dendrogram
-  names(r.dend) <- c(1:row_km)
-  rcl.list <- row_order(p2)
-  clu_df <- lapply(c(1:row_km), function(i){
-    out <- data.frame(GeneID = rownames(matr[rcl.list[[i]],]),
-                      Cluster = paste0("cluster", i),
-                      stringsAsFactors = FALSE)
-    return(out)
-  }) %>% do.call(rbind, .)
-  group <- clu_df
-  group$Cluster <- factor(group$Cluster, levels = unique(group$Cluster))
-  rownames(group) <- group$GeneID
-  group <-subset(group,select=-(GeneID))
-  annotation <- matr[match(rownames(group),rownames(matr)),]
-  gcols <- setNames(as.character(paletteer_d("RColorBrewer::Dark2")[1:row_km]),unique(group$Cluster))
+
+  df1 <- rowZscores(as.matrix(atac_scale), limit = TRUE) %>% as.data.frame()
+  logfile("Calculating ATAC matrix.")
+  set.seed(2023)
+  row_dend <- hclust(dist(df1))
+  #mat <- df1[row_dend$order, ]
+  group <- data.frame(C=cutree(row_dend, k = as.integer(cluster_N)))
+  group$Cluster <- paste0("Cluster",group$C)
+  group <- group[order(group$Cluster),]
+  group$Cluster <- factor(group$Cluster, levels = sort(unique(group$Cluster)))
+  mat <- df1[rownames(group),]
+  group <- subset(group,select=-(C))
+  annotation <- mat[match(rownames(group),rownames(as.data.frame(mat))),]
+  mycol <- c(paletteer::paletteer_d("ggthemes::Tableau_10"), paletteer::paletteer_d("ggthemes::Tableau_20"))
+  gcols <- setNames(as.character(mycol[1:cluster_N]),unique(group$Cluster))
   gcol <- list(Cluster=gcols)
-  N <- row_km - 1
+
+  N <- cluster_N - 1
   if(!is.na(palATAC)){
-    p3 <- ComplexHeatmap::pheatmap(annotation, show_rownames=F,cluster_row=F,cluster_col=F,border_color=NA,use_raster=raster,
+    p3 <- ComplexHeatmap::pheatmap(as.matrix(annotation), show_rownames=F,cluster_row=F,cluster_col=F,border_color=NA,use_raster=raster,
                                    annotation_colors =gcol, color = colorRampPalette(palATAC)(256),
-                                   annotation_row = group, gaps_row = cumsum(as.numeric(table(group$Cluster)))[1:N],main="ATAC-seq")
+                                   annotation_row = group, gaps_row = cumsum(as.numeric(table(group$Cluster)))[1:N],
+                                   main="ATAC-seq",name="ATAC Z-score")
   } else{
-    p3 <- ComplexHeatmap::pheatmap(annotation, show_rownames=F,cluster_row=F,cluster_col=F,border_color=NA,use_raster=raster,
+    p3 <- ComplexHeatmap::pheatmap(as.matrix(annotation), show_rownames=F,cluster_row=F,cluster_col=F,border_color=NA,use_raster=raster,
                                    annotation_colors =gcol, color = colorRampPalette(blueYellow)(256),
-                                   annotation_row = group, gaps_row = cumsum(as.numeric(table(group$Cluster)))[1:N],main="ATAC-seq")
+                                   annotation_row = group, gaps_row = cumsum(as.numeric(table(group$Cluster)))[1:N],
+                                   main="ATAC-seq",name="ATAC Z-score")
   }
   # Set the RNA matrix gene order
   rownames(p2g) <- p2g$idx_atac
+  logfile("Calculating RNA matrix.")
   p2gnew <- p2g[rownames(group),]
   p2g_rna <- p2gnew[,c("Gene","idx_rna")]
   rna_order <- merge(p2g_rna, rna, by.x="Gene",by.y=0,all.x =T)
@@ -176,19 +176,21 @@ plotP2GHeatmap <- function(p2g_res, cor_cutoff, atac_matrix, rna_matrix, row_km 
   rna_order <- rna_order[,colnames(annotation)]
   rna_scale <- rowZscores(as.matrix(rna_order),limit=T)
   if(!is.na(palRNA)){
-    p4 <- ComplexHeatmap::pheatmap(rna_scale, show_rownames=F,cluster_row=F,cluster_col=F,border_color=NA,use_raster=raster,
+    p4 <- ComplexHeatmap::pheatmap(as.matrix(rna_scale), show_rownames=F,cluster_row=F,cluster_col=F,border_color=NA,use_raster=raster,
                                    annotation_colors =gcol, color = colorRampPalette(palRNA)(256),
-                                   annotation_row = group, gaps_row = cumsum(as.numeric(table(group$Cluster)))[1:N],main="RNA-seq")
+                                   annotation_row = group, gaps_row = cumsum(as.numeric(table(group$Cluster)))[1:N],
+                                   main="RNA-seq", name="RNA Z-score")
   }else{
-    p4 <- ComplexHeatmap::pheatmap(rna_scale, show_rownames=F,cluster_row=F,cluster_col=F,border_color=NA,use_raster=raster,
+    p4 <- ComplexHeatmap::pheatmap(as.matrix(rna_scale), show_rownames=F,cluster_row=F,cluster_col=F,border_color=NA,use_raster=raster,
                                    annotation_colors =gcol, color = colorRampPalette(solarExtra)(256),
-                                   annotation_row = group, gaps_row = cumsum(as.numeric(table(group$Cluster)))[1:N],main="RNA-seq")
+                                   annotation_row = group, gaps_row = cumsum(as.numeric(table(group$Cluster)))[1:N],
+                                   main="RNA-seq", name="RNA Z-score")
   }
-  pcor <- Heatmap(p2gnew$correlations, cluster_rows=F, name = "Correlations", col = paletteer_d("RColorBrewer::Oranges")[1:7])
-  ppvalue <- Heatmap(-log10(p2gnew$p.value), cluster_rows=F, name = "-log10(p.value)", col = paletteer_d("RColorBrewer::Greens")[1:7])
+  pcor <- ComplexHeatmap::Heatmap(p2gnew$correlations, cluster_rows=F, name = "Correlations", col = paletteer::paletteer_d("RColorBrewer::Oranges")[1:7])
+  ppvalue <- ComplexHeatmap::Heatmap(-log10(p2gnew$p.value), cluster_rows=F, name = "-log10(p.value)", col = paletteer::paletteer_d("RColorBrewer::Greens")[1:7])
   gene_type_col = setNames(as.character(paletteer_d("ggthemes::Classic_10")[1:length(unique(p2gnew$Type))]),unique(p2gnew$Type))
-  ptype <- Heatmap(p2gnew$Type, cluster_rows=F, name = "Type", col = gene_type_col)
-  pdis <- Heatmap(log10(abs(p2gnew$Summit2TSS)+1), cluster_rows=F, name = "log10(Summit2TSS + 1)", col = paletteer_d("grDevices::blues9")[1:7])
+  ptype <- ComplexHeatmap::Heatmap(p2gnew$Type, cluster_rows=F, name = "Type", col = gene_type_col)
+  pdis <- ComplexHeatmap::Heatmap(log10(abs(p2gnew$Summit2TSS)+1), cluster_rows=F, name = "log10(Summit2TSS + 1)", col = paletteer::paletteer_d("grDevices::blues9")[1:7])
   if(!is.na(save_path)){
     write.table(rna_scale, sprintf("%s/Peak2Gene_Links_RNA_matrix.tsv",save_path),sep='\t',quote=F)
     write.table(annotation, sprintf("%s/Peak2Gene_Links_ATAC_matrix.tsv",save_path),sep='\t',quote=F)
@@ -197,7 +199,7 @@ plotP2GHeatmap <- function(p2g_res, cor_cutoff, atac_matrix, rna_matrix, row_km 
     draw(p3 + p4 + pdis + ptype + pcor + ppvalue, column_title = sprintf("%s Peak-to-Gene linkages",dim(p2g)[1]))
     dev.off()
   }
-  return(draw(p3 + p4 + pdis + ptype + pcor + ppvalue, column_title = sprintf("%s Peak-to-Gene linkages",dim(p2g)[1])))
+  return(ComplexHeatmap::draw(p3 + p4 + pdis + ptype + pcor + ppvalue, column_title = sprintf("%s Peak-to-Gene linkages",dim(p2g)[1])))
 }
 
 
@@ -328,7 +330,7 @@ plotP2GTracks <-  function(samples_path, samples_suffix, gene_name, left = 10000
                            pos.ratio = c(0.02,0.8),
                            back.color = back.color)
 
-        gtf <- import(CATAnno$gtf,format = "gtf") %>% data.frame()
+        gtf <- rtracklayer::import(CATAnno$gtf,format = "gtf") %>% data.frame()
         trans <- trancriptVis(gtfFile = gtf,
                               Chr = chr,
                               posStart = start - 3000,
@@ -347,7 +349,7 @@ plotP2GTracks <-  function(samples_path, samples_suffix, gene_name, left = 10000
         peakvis <- bedVis(bdFile = peaks,
                           chr = chr, region.min = start, region.max = end, fill = "#006BA4", show.legend=F)
 
-        ptrack %>% insert_bottom(peakvis,height = 0.03)%>% insert_bottom(plink,height = 0.1) %>% insert_bottom(trans,height = 0.08)
+        ptrack %>% aplot::insert_bottom(peakvis,height = 0.03)%>% aplot::insert_bottom(plink,height = 0.1) %>% aplot::insert_bottom(trans,height = 0.08)
       }
     }
     else{
@@ -364,7 +366,7 @@ plotP2GTracks <-  function(samples_path, samples_suffix, gene_name, left = 10000
                          pos.ratio = c(0.02,0.8),
                          back.color = back.color)
 
-      gtf <- import(CATAnno$gtf,format = "gtf") %>% data.frame()
+      gtf <- rtracklayer::import(CATAnno$gtf,format = "gtf") %>% data.frame()
       trans <- trancriptVis(gtfFile = gtf,
                             Chr = chr,
                             posStart = start - 3000,
@@ -383,7 +385,7 @@ plotP2GTracks <-  function(samples_path, samples_suffix, gene_name, left = 10000
       peakvis <- bedVis(bdFile = peaks,
                         chr = chr, region.min = start, region.max = end, fill = "#006BA4", show.legend=F)
 
-      ptrack %>% insert_bottom(peakvis,height = 0.03)%>% insert_bottom(plink,height = 0.1) %>% insert_bottom(trans,height = 0.08)
+      ptrack %>% aplot::insert_bottom(peakvis,height = 0.03)%>% aplot::insert_bottom(plink,height = 0.1) %>% aplot::insert_bottom(trans,height = 0.08)
     }
   }
 }

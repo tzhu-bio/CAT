@@ -317,7 +317,7 @@ linkVis <- function(linkData = NULL,
 
 loadBigWig <- function(bwFile = NULL, chr = NULL, start, end){
   # loop read bed
-  which <- GRanges(c(chr), IRanges(c(start), c(end)))
+  which <- GenomicRanges::GRanges(c(chr), IRanges::IRanges(c(start), c(end)))
   purrr::map_df(1:length(bwFile),function(x){
     tmp <- rtracklayer::import.bw(bwFile[x],which=which) %>%
       data.frame() %>%
@@ -949,7 +949,7 @@ trancriptVis <- function(gtfFile = NULL,
                          arrowBreak = 0.15,
                          exonColorBy = NULL,
                          show.legend = FALSE,
-                         exonFill = '#333399',
+                         exonFill = "#333399",
                          circle = FALSE,
                          cicStart = pi,
                          circSegCol = '#333399',
