@@ -14,7 +14,7 @@
 </div>
 
 
-![image](https://github.com/tzhu-bio/CAT/blob/main/png/cat_compare.png)
+![image](https://github.com/tzhu-bio/CAT/blob/main/png/cat_compar.png)
 
 ![image](https://github.com/tzhu-bio/CAT/blob/main/png/workflow.jpg)
 ``` r
