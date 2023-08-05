@@ -18,7 +18,8 @@
 
 ![image](https://github.com/tzhu-bio/CAT/blob/main/png/workflow.jpg)
 ``` r
-if (!requireNamespace("devtools", quietly = TRUE)) install.packages("devtools")
+if (!requireNamespace("devtools", quietly = TRUE))
+install.packages("devtools")
 ```
 ``` r
 devtools::install_github("tzhu-bio/CAT")
