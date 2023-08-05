@@ -14,7 +14,7 @@ getSNP2Gene <- function(snp, peak2gene, corr_cutoff = 0.4){
   snp_bed$end <- snp_bed$start
   snp1 <- GenomicRanges::makeGRangesFromDataFrame(snp_bed)
   snp2 <- valr::gr_to_bed(snp1)
-  p2g <- read.table(peak2gene)
+  p2g <- readRDS(peak2gene)
   p2g$chrom <- sapply(strsplit(p2g$V1,":"), `[`, 1)
   p2g$bed <- sapply(strsplit(p2g$V1,":"), `[`, 2)
   p2g1 <- p2g %>% tidyr::separate(bed, c("start", "end"), "-")
