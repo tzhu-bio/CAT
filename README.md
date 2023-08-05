@@ -17,6 +17,7 @@
 ![image](https://github.com/tzhu-bio/CAT/blob/main/png/cat_compar.png)
 
 ![image](https://github.com/tzhu-bio/CAT/blob/main/png/workflow.jpg)
+## Installation
 ``` r
 if (!requireNamespace("devtools", quietly = TRUE))
 install.packages("devtools")
