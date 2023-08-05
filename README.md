@@ -13,9 +13,9 @@
     <a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Roboto+Slab&color=%237E3ACE&size=30&center=true&vCenter=true&width=750&lines=An advanced analysis toolkit for ATAC-seq." alt="Computer Engineering Student, Brazilian front-end developer, Power Metal lover"></a>
 </div>
 
-
+## Comparisons
 ![image](https://github.com/tzhu-bio/CAT/blob/main/png/cat_compar.png)
-
+## Workflow
 ![image](https://github.com/tzhu-bio/CAT/blob/main/png/workflow.jpg)
 ## Installation
 ``` r
