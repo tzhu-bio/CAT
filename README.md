@@ -23,6 +23,7 @@ if (!requireNamespace("devtools", quietly = TRUE)) install.packages("devtools")
 ``` r
 devtools::install_github("tzhu-bio/CAT")
 ```
+See [Full Manual](https://tzhu-bio.github.io/CAT_bookdown/book/) to get the tutorial.
 
 ## Publication
 Nature / Cell / Science
