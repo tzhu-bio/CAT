@@ -18,7 +18,7 @@ getSNP2Gene <- function(snp, peak2gene, corr_cutoff = 0.4){
   p2g$chrom <- sapply(strsplit(p2g$Peak,":"), `[`, 1)
   p2g$bed <- sapply(strsplit(p2g$Peak,":"), `[`, 2)
   p2g1 <- p2g %>% tidyr::separate(bed, c("start", "end"), "-")
-  p2g1 <- p2g1[,c(8,9,10,1,2,3,4,5,6,7)]
+  p2g1 <- p2g1[,c("chrom", "start", "end", "Peak","Gene", "correlations","p.value","Type","TSS","Summit2TSS")]
   colnames(p2g1)[4:10] <- c("Peak","Gene","Correlation","P_value","Type","TSS","Distance")
   p2g2 <- p2g1[abs(p2g1$Correlation) >= corr_cutoff, c(1,2,3)]
   p2g2$start <- as.integer(p2g2$start) + 1
@@ -29,5 +29,6 @@ getSNP2Gene <- function(snp, peak2gene, corr_cutoff = 0.4){
   res1$Peak <- sprintf("%s:%s-%s",res1$chrom, res1$start.x,res1$end.x)
   final <- merge(res1, p2g1, by="Peak", all.x=T)[,c("start.y","Peak","Gene","Correlation","P_value","Type","TSS","Distance")]
   colnames(final)[1] <- c("SNP")
+  final <- final[abs(final$Correlation) >= corr_cutoff,]
   return(final)
 }
