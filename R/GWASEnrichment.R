@@ -134,8 +134,8 @@ GWASEnrichment <- function(euclideanNorm_file, snp, trait, output_path){
                                        ranges = IRanges::IRanges(start = quant_dt$start, end = quant_dt$end))
     overlap_idx <- GenomicRanges::findOverlaps(snp_gr, quant_gr)
     if (length(overlap_idx) > 0) {
-      overlap_snp <- snp_dt[IRanges::queryHits(overlap_idx),]
-      overlap_quant <- quant_dt[IRanges::subjectHits(overlap_idx),]
+      overlap_snp <- snp_dt[GenomicRanges::queryHits(overlap_idx),]
+      overlap_quant <- quant_dt[GenomicRanges::subjectHits(overlap_idx),]
 
       # merge the data
       overlap_df <- cbind(overlap_snp, overlap_quant)
