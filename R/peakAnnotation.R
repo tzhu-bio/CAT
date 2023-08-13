@@ -187,10 +187,10 @@ plotPDI <- function(peak_path, sample, suffix, tss_flank, cutoff, save_path=NA, 
 #'
 #' @examples    annoMergedPeaks(peak_path = "F:/CAT/example/peaks/", samples = c("Bulk_B", "Mem_B","Naive_B"),
 #'                   suffix= "_peaks_unique.narrowPeak.bed",tss_flank=1000, cutoff=3000)
-annoMergedPeaks <- function(peak_path, samples, suffix, tss_flank, cutoff, save_path=NA, save_name=NA){
+annoMergedPeaks <- function(peak_path, samples, suffix="_peaks_unique.narrowPeak.bed", tss_flank, cutoff, save_path=NA, save_name=NA){
   checkGeAnno()
   peak <- lapply(samples, function(x){
-    read.table(sprintf("%s/%s_peaks_unique.narrowPeak.bed", peak_path, x))
+    read.table(sprintf("%s/%s%s", peak_path, x, suffix))
   })
 
   all_peaks <- dplyr::bind_rows(peak)[,c(1:3)]
