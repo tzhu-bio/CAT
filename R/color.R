@@ -11,7 +11,7 @@ pcol20 <- paletteer::paletteer_d("ggthemes::Tableau_20")
 pcol_Circle10  <- paletteer::paletteer_d("ggthemes::Classic_Cyclic")
 pcol_Circle20 <- paletteer::paletteer_d("ggthemes::Hue_Circle")
 pcol_dark <- paletteer::paletteer_d("RColorBrewer::Dark2")
-pcol30 <- c(pcol_Circle20, pcol10)
+pcol30 <- c(pcol_Circle20, pcol20, pcol10, pcol8)
 
 ## Primarily Continuous Palettes
 horizon <- c("1"='#000075',"4"='#2E00FF', "6"='#9408F7', "10"='#C729D6', "8"='#FA4AB5', "3"='#FF6A95', "7"='#FF8B74', "5"='#FFAC53', "9"='#FFCD32', "2"='#FFFF60')
