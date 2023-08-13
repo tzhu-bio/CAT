@@ -13,9 +13,9 @@
 #' @export
 #'
 #' @examples annoPeaks("~/H3ac/peaks/",c("S1","S2","S3","S4","S5","S6"),
-#'                     "_peaks_unique.narrowPeak","org.Hs.eg.db",plot_percent=F)
+#'                     "_peaks_unique.narrowPeak.bed","org.Hs.eg.db",plot_percent=F)
 #'
-annoPeaks <- function(peak_path, sample, peak_suffix, annoDb_name, plot_percent=T){
+annoPeaks <- function(peak_path, sample, peak_suffix="_peaks_unique.narrowPeak.bed", annoDb_name, plot_percent=T){
   lst <- list()
   for (i in sample){
     lst[[i]] <-  sprintf("%s/%s%s", peak_path, i, peak_suffix)
@@ -118,11 +118,11 @@ plotSummitDis <- function(peak_path, sample, suffix){
 #' @export
 #'
 #' @examples plotPDI("F:/CAT/example/peaks/", c("Bulk_B", "Mem_B","Naive_B"),
-#'                   "_peaks_unique.narrowPeak.bed","F:/CAT/example/hg19_tss_standard.bed",
-#'                   "F:/CAT/example/hg19_gene_standard.bed",genome_size="F:/CAT/example/hg19.chrom.size", cutoff=3000, tss_flank=1000)
+#'                   "_peaks_unique.narrowPeak.bed",
+#'                   "F:/CAT/example/hg19_gene_standard.bed", cutoff=3000, tss_flank=1000)
 #'
 #'
-plotPDI <- function(peak_path, sample, suffix, tss_flank, cutoff, save_path=NA, save_name=NA){
+plotPDI <- function(peak_path, sample, suffix="_peaks_unique.narrowPeak.bed", tss_flank, cutoff, save_path=NA, save_name=NA){
   checkGeAnno()
   sample_lst <- list()
   for (i in sample){
