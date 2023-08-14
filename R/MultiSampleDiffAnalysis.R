@@ -320,8 +320,8 @@ for (i in unique(target$cluster)){
      flush.console()
     go <- clusterProfiler::enrichGO(OrgDb=orgdb,
                  gene = unique(target[target$cluster==i,]$gene),
-                 pvalueCutoff = 0.5,
-                 qvalueCutoff = 0.5,
+                 pvalueCutoff = 1,
+                 qvalueCutoff = 1,
                  keyType = 'ENSEMBL',
                  pAdjustMethod = 'fdr',
                  ont = ont)
