@@ -67,7 +67,7 @@ getCount <- function(sample_list, cut_path, peak_path, peak_suffix="_peaks_uniqu
 
   merged_peaks <- valr::bed_merge(all_peaks)
   coverage <- lapply(sample_list, function(x) {
-    cut <- valr::read_bed(sprintf("%s/%s.cuts",cut_path,x))
+    cut <- valr::read_bed(sprintf("%s/%s_q30_cut_sites.bed",cut_path,x))
     res <- valr::bed_map(merged_peaks,cut,sum=sum(X4))[4]
     return(res)
   })
@@ -104,7 +104,7 @@ getCountSplit <- function(sample_list, cut_path, peak_path, peak_suffix="_peaks_
 
   merged_peaks <- valr::bed_merge(all_peaks)
   coverage <- lapply(sample_list, function(x) {
-    cut <- valr::read_bed(sprintf("%s/%s.cuts",cut_path,x))
+    cut <- valr::read_bed(sprintf("%s/%s_q30_cut_sites.bed",cut_path,x))
     res <- valr::bed_map(merged_peaks,cut,sum=sum(X4))[4]
     return(res)
   })
