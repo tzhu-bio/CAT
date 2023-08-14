@@ -334,11 +334,8 @@ res <- dplyr::bind_rows(golist)
 res <- res[res$p.adjust < 0.05,]
 res$score <- -log10(res$p.adjust)
 res <- res %>% dplyr::group_by(cluster) %>% dplyr::slice_max(order_by = score, n = N_top, with_ties=FALSE)
-
+res$cluster <- factor(res$cluster, levels = gtools::mixedsort(res$cluster))
 if(clustering == FALSE){
-numbers <- as.integer(sub("Cluster", "", unique(target$cluster)))
-sorted_data <- unique(target$cluster)[order(numbers)]
-res$cluster <- factor(res$cluster, levels = sorted_data)
 p <- ggplot2::ggplot(res, aes(x=cluster, y=Description)) +
      ggplot2::geom_point(aes(size= Count, fill = score),shape=21,alpha=0.9)+
      ggplot2::scale_fill_gradientn(colours =paletteer::paletteer_d("ggsci::pink_material")[1:6])+
