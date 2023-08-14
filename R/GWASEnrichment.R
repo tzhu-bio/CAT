@@ -141,10 +141,11 @@ GWASEnrichment <- function(euclideanNorm_file, snp, trait, output_path){
       overlap_df <- cbind(overlap_snp, overlap_quant)
       rownames(overlap_df) <- NULL
       unique_df <- overlap_quant[!duplicated(overlap_quant[c(1,2,3)]),]
-    }
-    return(list(overlap_df, unique_df))
+      return(list(overlap_df, unique_df))
+    } else{
+      return(NULL)
   }
-
+}
   # Calculate enrichment
   calc_enrichment <- function(unique_peaks, num_peaks) {
 
@@ -194,6 +195,9 @@ GWASEnrichment <- function(euclideanNorm_file, snp, trait, output_path){
 
   # Identify overlapping peak-SNP pairs and unique peaks
   overlap_results <- overlap_snp_peak(snp, ranked_data)
+  if (overlap_results== NULL){
+    print("No 0verlapping SNPs!")
+  } else{
   overlap_matrix <- overlap_results[[1]]
   unique_peaks <- overlap_results[[2]]
 
@@ -211,7 +215,7 @@ GWASEnrichment <- function(euclideanNorm_file, snp, trait, output_path){
   write.table(data.frame(overlap_matrix), sprintf("%s/%s_SNP_Overlap_Peaks.txt", output_path, trait),sep='\t',col.names=T, row.names=F,quote=F)
   write.table(data.frame(unique_peaks), sprintf("%s/%s_Unique_Peaks.txt", output_path, trait),sep='\t',col.names=T, row.names=F,quote=F)
 }
-
+}
 ##################################################
 #     Integrate the Enrichment Results.          #
 ##################################################
