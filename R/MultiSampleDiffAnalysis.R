@@ -114,7 +114,7 @@ calJSD <- function(norm_data, save_path=NA, file_prefix){
 getSpecificPeak <- function(norm_data, jsd_file, cutoff = 0.2, save_path=NA, file_prefix=NA){
   jsd_res1 <- jsd_file
   jsd_res1$peak <- rownames(jsd_res1)
-  logfile("Get the TOP 20% specifci peaks.")
+  logfile(sprintf("Get the TOP %s% specifci peaks.",cutoff*100))
   sp_peak <- head(jsd_res1[order(jsd_res1$H_specificity, decreasing = TRUE),], n = as.integer(cutoff * (dim(jsd_res1)[1])))
   sp_data <- norm_data[rownames(sp_peak),]
   if(!is.na(save_path)){
