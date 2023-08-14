@@ -334,7 +334,7 @@ res <- dplyr::bind_rows(golist)
 res <- res[res$p.adjust < 0.05,]
 res$score <- -log10(res$p.adjust)
 res <- res %>% dplyr::group_by(cluster) %>% dplyr::slice_max(order_by = score, n = N_top, with_ties=FALSE)
-res$cluster <- factor(res$cluster, levels = gtools::mixedsort(res$cluster))
+res$cluster <- factor(res$cluster, levels = gtools::mixedsort(unique(res$cluster)))
 if(clustering == FALSE){
 p <- ggplot2::ggplot(res, aes(x=cluster, y=Description)) +
      ggplot2::geom_point(aes(size= Count, fill = score),shape=21,alpha=0.9)+
