@@ -97,7 +97,7 @@ plotTSS <- function(tss_path, sample, split_group = FALSE){
 plotPCA <- function(norm_data, save_path=NA,figure_height=8.27,figure_width=8.27){
   df <- tibble::rownames_to_column(as.data.frame(t(norm_data)), "group")
 
-  pca_res <- stats::prcomp(t(norm_data), scale. = FALSE)
+  pca_res <- stats::prcomp(t(norm_data), scale. = TRUE)
 
   options(repr.plot.width = 10, repr.plot.height =10, repr.plot.res = 100)
   p <- ggplot2::autoplot(pca_res, frame = TRUE, frame.type = 'norm', label = F, colour = 'group',data=df) +
