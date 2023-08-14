@@ -36,6 +36,7 @@ quantification <- function(sample_list, cut_path, peak_path, peak_suffix="_peaks
   norm_data <- quantile_normalization(as.matrix(all_cov / peak_len))
   rownames(norm_data) <- sprintf("%s:%s-%s",merged_peaks$chrom, merged_peaks$start,merged_peaks$end)
   cpm_data <- sweep(norm_data,2,colSums(norm_data),`/`) * 1000000
+  cpm_data <- cpm_data[rowSums(cpm_data)!=0, ]
   if(!is.na(save_file_path)){
     write.table(cpm_data, file=sprintf("%s/ATAC_CPM_Norm_Data.tsv",save_file_path), sep='\t',quote=F,col.names=T,row.names=T)
   }
