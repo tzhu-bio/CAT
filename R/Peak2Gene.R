@@ -196,7 +196,7 @@ plotP2GHeatmap <- function(p2g_res, cor_cutoff, atac_matrix, rna_matrix, cluster
     write.table(annotation, sprintf("%s/Peak2Gene_Links_ATAC_matrix.tsv",save_path),sep='\t',quote=F)
     write.table(p2g, sprintf("%s/Peak2Gene_Links_matrix.tsv",save_path),sep='\t',quote=F)
     pdf(sprintf("%s/ATAC_RNA_All_Links_Heatmap.pdf",save_path),width=fig_width,height=fig_height)
-    draw(p3 + p4 + pdis + ptype + pcor + ppvalue, column_title = sprintf("%s Peak-to-Gene linkages",dim(p2g)[1]))
+    ComplexHeatmap::draw(p3 + p4 + pdis + ptype + pcor + ppvalue, column_title = sprintf("%s Peak-to-Gene linkages",dim(p2g)[1]))
     dev.off()
   }
   return(ComplexHeatmap::draw(p3 + p4 + pdis + ptype + pcor + ppvalue, column_title = sprintf("%s Peak-to-Gene linkages",dim(p2g)[1])))
