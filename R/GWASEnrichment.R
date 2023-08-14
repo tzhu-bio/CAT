@@ -195,7 +195,7 @@ GWASEnrichment <- function(euclideanNorm_file, snp, trait, output_path){
 
   # Identify overlapping peak-SNP pairs and unique peaks
   overlap_results <- overlap_snp_peak(snp, ranked_data)
-  if (overlap_results== NULL){
+  if (is.null(overlap_results)){
     print("No 0verlapping SNPs!")
   } else{
   overlap_matrix <- overlap_results[[1]]
