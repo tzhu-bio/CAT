@@ -212,8 +212,9 @@ plotClusterSpecificPeak <- function(specific_peak, zscore_min = -2, zscore_max =
   #mat <- df1[row_dend$order, ]
   group <- data.frame(C=cutree(row_dend, k = as.integer(cluster_N)))
   group$Cluster <- paste0("Cluster",group$C)
-  group <- group[gtools::mixedsort(group$Cluster),]
   group$Cluster <- factor(group$Cluster, levels = gtools::mixedsort(unique(group$Cluster)))
+  group <- group[order(group$Cluster),]
+  #group$Cluster <- factor(group$Cluster, levels = gtools::mixedsort(unique(group$Cluster)))
   mat <- df1[rownames(group),]
   group <- subset(group,select=-(C))
   annotation <- mat[match(rownames(group),rownames(as.data.frame(mat))),]
