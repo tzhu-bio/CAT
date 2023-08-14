@@ -14,7 +14,7 @@
 #' @examples  quantification(sample_list=c("s1","s2","s3","s4"), cut_path = "~/snakemake/cuts/", peak_path = "~/snakemake/peaks/", save_file_path = "~/quant/res")
 #'
 #'
-quantification <- function(sample_list, cut_path, peak_path, peak_suffix="_peaks_unique.narrowPeak", save_file_path=NA){
+quantification <- function(sample_list, cut_path, peak_path, peak_suffix="_peaks_unique.narrowPeak.bed", save_file_path=NA){
 
   peak <- list()
   peak <- lapply(sample_list, function(x){
