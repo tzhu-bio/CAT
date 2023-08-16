@@ -119,7 +119,7 @@ compareFootprints <- function(samples, motif, smooth_window=5, flanking_length=2
   }
   lista <- list()
   for (a in samples){
-    lista[[a]] <- sprintf("%s/%s/%s/beds/%s_all.bed",FTAnno$bindetect, samples[1], motif, motif)
+    lista[[a]] <- sprintf("%s/%s/beds/%s_all.bed",FTAnno$bindetect, motif, motif)
   }
   listb <- list()
   for (b in samples){
