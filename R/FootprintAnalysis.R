@@ -130,7 +130,7 @@ compareFootprints <- function(samples, motif, smooth_window=5, flanking_length=2
 
   res <- parallel::mcmapply(function(gene_bed, coverage_bed, group_name){
     return(cal_footprint(gene_bed, coverage_bed, group_name))
-  }, gene_bed=lista, coverage_bed=listb, group_name=c, mc.cores=1, SIMPLIFY = FALSE)
+  }, gene_bed=lista, coverage_bed=listb, group_name=c, mc.cores=N_cores, SIMPLIFY = FALSE)
 
   # res <- parallel::mclapply(function(gene_bed, coverage_bed, group_name){
   #   return(cal_footprint(gene_bed, coverage_bed, group_name))
