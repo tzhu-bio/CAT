@@ -319,7 +319,7 @@ getMotif2Gene <- function(motif_file, orgdb, tf_family){
   header_lines <- grep("^>", file_lines, value = TRUE)
   df <- data.frame(header_lines) %>% tidyr::separate(col = header_lines, into = c("Motif_ID", "Motif_Name"), sep = "\t", remove = TRUE)
   df$Motif_ID <- gsub(">","",df$Motif_ID)
-  id1 <- AnnotationDbi::mapIds( x = orgdb, keys = toupper(df$Motif_Name), column = c("ENSEMBL"), keytype = c('SYMBOL'),fuzzy = TRUE, multiVals = "first", ignore.case = TRUE)
+  id1 <- AnnotationDbi::mapIds( x = orgdb, keys = df$Motif_Name, column = c("ENSEMBL"), keytype = c('SYMBOL'),fuzzy = TRUE, multiVals = "first", ignore.case = TRUE)
   df1 <- data.frame(ENSEMBL=id1, Gene_Name=names(id1))
   res <- cbind(df, df1)
   res <- res[complete.cases(res), ]
