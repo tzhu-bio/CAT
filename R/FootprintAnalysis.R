@@ -231,7 +231,7 @@ plotDiffFootprint <- function(samples,cutoff=NA, plot_type=c("Volcano","Bar","Lo
       }
     }
   }
-  if (check_name == 2){
+  if (check_name == 3){
     bindetect <- bindetect[,c("name",sprintf("%s_footprints_%s_footprints_change",samples[1], samples[2]),
                               sprintf("%s_footprints_%s_footprints_pvalue",samples[1], samples[2]))]
     colnames(bindetect) <- c("motif","change","p")
