@@ -19,7 +19,7 @@
 getNetwork <- function(sample, tf, peak2gene, p2g_cutoff = 0.5, motif2gene, targets = 1, level = 2){
   checkFTAnno()
   getTarget <- function(tf, level){
-    ft <- read.table(sprintf("%s/%s/%s/beds/%s_%s_bound.bed",FTAnno$bindetect, sample, tf, tf, sample))
+    ft <- read.table(sprintf("%s/%s/beds/%s_%s_footprints_bound.bed",FTAnno$bindetect, tf, tf, sample))
     ft$peak <- sprintf("%s:%s-%s", ft$V7, ft$V8, ft$V9)
     ft <- ft[,c(4,11)]
     res <- merge(ft,p2g, by.x="peak", by.y="Peak", all = F)
