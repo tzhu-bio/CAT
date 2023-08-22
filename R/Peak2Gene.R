@@ -46,7 +46,12 @@ getPeak2Gene <- function(atac_matrix, rna_matrix, peak_annotation,
     })
     correlations <- apply(df, 1, function(row){
       corr <- cor(as.numeric(row_data), row)
+      if (is.numeric(corr)){
       p <- BSDA::z.test(corr_random, mu = corr, sigma.x = 15)$p.value
+      } else{
+        corr = 0
+        p <- BSDA::z.test(corr_random, mu = corr, sigma.x = 15)$p.value
+      }
       return(list(corr = corr, p = p))
     })
     result <- data.frame(Peak = rownames(df), Gene = gene)
