@@ -170,13 +170,13 @@ plotPDI <- function(peak_path, sample, suffix="_peaks_unique.narrowPeak.bed", ts
   return(p)
 }
 
+
 ##############################################################################
 #    Determining the merged peak category (Proximal/Distal/Intragenic)       #
 ##############################################################################
 
-#' @param peak_path   The path containing the peak bed files.
-#' @param samples  Sample names.
-#' @param suffix  Provide a suffix for the peak file. Like the ".narrowPeak.bed".
+#' Determining the merged peak category (Proximal / Distal / Intragenic).
+#' @param quant_data Quantified data obtained by **quantification**.
 #' @param tss_flank  How many bp downstream of the TSS is considered proximal.
 #' @param cutoff The distance of peak summit to TSS (bp) to determine the proximal / distal.
 #' @param save_path Save file path.
@@ -185,17 +185,15 @@ plotPDI <- function(peak_path, sample, suffix="_peaks_unique.narrowPeak.bed", ts
 #' @return
 #' @export
 #'
-#' @examples    annoMergedPeaks(peak_path = "F:/CAT/example/peaks/", samples = c("Bulk_B", "Mem_B","Naive_B"),
-#'                   suffix= "_peaks_unique.narrowPeak.bed",tss_flank=1000, cutoff=3000)
-annoMergedPeaks <- function(peak_path, samples, suffix="_peaks_unique.narrowPeak.bed", tss_flank, cutoff, save_path=NA, save_name=NA){
+#' @examples    annoMergedPeaks("F:/CAT/example/ATAC_CPM_Norm_Data.tsv,tss_flank=1000, cutoff=3000)
+#'
+annoMergedPeaks <- function(quant_data, tss_flank, cutoff, save_path=NA, save_name=NA){
   checkGeAnno()
-  peak <- lapply(samples, function(x){
-    read.table(sprintf("%s/%s%s", peak_path, x, suffix))
-  })
-
-  all_peaks <- dplyr::bind_rows(peak)[,c(1:3)]
-  colnames(all_peaks) <- c("chrom", "start", "end")
-  merged_peaks <- valr::bed_merge(all_peaks)
+  peak <- read.table(quant_data, header = T, row.names = 1)
+  merged<- data.frame(peak=rownames(peak))
+  merged_peaks <- merged %>% tidyr::separate(peak, c("chrom", "tem1"), ":") %>% tidyr::separate(tem1, c("start", "end"), "-")
+  merged_peaks$start <- as.integer(merged_peaks$start)
+  merged_peaks$end <- as.integer(merged_peaks$end)
 
   gene <- CATAnno$gene
   tss <- CATAnno$tss
