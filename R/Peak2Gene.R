@@ -25,7 +25,7 @@ getPeak2Gene <- function(atac_matrix, rna_matrix, peak_annotation,
   logfile("Remove the gene with all exp value is 0.")
   rna_paired <- rna_paired[rowSums(rna_paired) > 0,]
   tss <- CATAnno$tss
-  rownames(tss) <- tss$V4
+  rownames(tss) <- tss$name
   tss_df <- tss[,c(1,2,3,4,6)]
   colnames(tss_df) <- c("chr","start","end","gene","strand")
   gr.tss <- GenomicRanges::makeGRangesFromDataFrame(tss_df,keep.extra.columns=TRUE)
