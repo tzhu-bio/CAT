@@ -224,5 +224,8 @@ annoMergedPeaks <- function(quant_data, tss_flank, cutoff, save_path=NA, save_na
   intra_pe <- intra_pe[,c(1,4,5,6,2)]
   colnames(intra_pe) <- c("Chromosome","Start","End","Type","summit")
   rownames(intra_pe) <- sprintf("%s:%s-%s", intra_pe$Chromosome, intra_pe$Start, intra_pe$End)
+  if(!is.na(save_path)){
+  write.table(sprintf("%s/%s_Merged_Peaks_Annotations.tsv", save_path, save_name), sep='\t', quote=F, col.names=T, row.names=T) 
+  }
   return(intra_pe)
 }
