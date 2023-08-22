@@ -24,7 +24,7 @@ getPeak2Gene <- function(atac_matrix, rna_matrix, peak_annotation,
   rna_paired <- read.table(rna_matrix,head=T, row.names = 1)
   logfile("Remove the gene with all exp value is 0.")
   rna_paired <- rna_paired[rowSums(rna_paired) > 0,]
-  tss <- CATAnno$tss
+  tss <- CATAnno$tss %>% as.data.frame()
   rownames(tss) <- tss$name
   tss_df <- tss[,c(1,2,3,4,6)]
   colnames(tss_df) <- c("chr","start","end","gene","strand")
