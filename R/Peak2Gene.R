@@ -34,7 +34,7 @@ getPeak2Gene <- function(atac_matrix, rna_matrix, peak_annotation,
   rownames(peak_bed) <- NULL
   peak_gr <- GenomicRanges::makeGRangesFromDataFrame(peak_bed, keep.extra.columns=TRUE)
 
-  ## Make the psedo data for permutation
+  ## Make the pseudo data for permutation
   logfile("Make the pseudo data for permutation...")
   test_random <- atac_paired_norm[sample(nrow(atac_paired_norm), N_permutation), ]
 
