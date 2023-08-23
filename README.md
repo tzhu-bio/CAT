@@ -26,7 +26,7 @@ install.packages("devtools")
 devtools::install_github("tzhu-bio/CAT")
 ```
 ## Full Manual
-See [Full Manual](https://tzhu-bio.github.io/CAT_bookdown/docs/) to get the tutorial.
+See [Full Manual]( https://tzhu-bio.github.io/CAT_bookdown/) to get the tutorial.
 
 ## Publication
 Nature / Cell / Science
