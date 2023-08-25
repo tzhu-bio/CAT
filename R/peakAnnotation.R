@@ -16,6 +16,7 @@
 #'                     "_peaks_unique.narrowPeak.bed","org.Hs.eg.db",plot_percent=F)
 #'
 annoPeaks <- function(peak_path, sample, peak_suffix="_peaks_unique.narrowPeak.bed", annoDb_name, plot_percent=T){
+  checkGeAnno()
   lst <- list()
   for (i in sample){
     lst[[i]] <-  sprintf("%s/%s%s", peak_path, i, peak_suffix)
