@@ -388,7 +388,7 @@ plotGONetwork <- function(target, orgdb, ont = "BP", showCategory = 50, category
      numbers <- as.integer(sub("Cluster", "", unique(target$cluster)))
      sorted_data <- unique(target$cluster)[order(numbers)]
      target$cluster <- factor(target$cluster, levels = sorted_data)
-     logfile("Compare the GO results with cluster...")
+     logfile("Compare the GO results with clusters...")
      xx <- clusterProfiler::compareCluster(gene~cluster, data=target,
                      pvalueCutoff = 0.05,
                      keyType = 'ENSEMBL',
