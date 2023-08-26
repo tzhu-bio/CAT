@@ -2,13 +2,11 @@ Package: CAT
 Type: Package
 Title: An advanced analysis toolkit for ATAC-seq.
 Version: 1.0.0
-Authors@R: person("Tao", "Zhu", , "tzhubio@gmail.com", role = c("aut"),
+Authors@R: person("Tao", "Zhu", , "tzhubio@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-9667-498X"))
 BugReports: https://github.com/tzhu-bio/CAT/issues
 Depends:
-    R (>= 4.3.0),
-    tidyverse
-Maintainer: Tao Zhu
+    R (>= 4.3.0)
 Description: This package is designed to do advanced ATAC-seq analyses in R.
 License: GPL (>= 2)
 Encoding: UTF-8
