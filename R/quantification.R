@@ -66,6 +66,7 @@ getCount <- function(sample_list, cut_path, peak_path, peak_suffix="_peaks_uniqu
   colnames(all_peaks) <- c("chrom", "start", "end")
 
   merged_peaks <- valr::bed_merge(all_peaks)
+  rownames(merged_peaks) <- sprintf("%s:%s-%s",merged_peaks$chrom, merged_peaks$start,merged_peaks$end)
   coverage <- lapply(sample_list, function(x) {
     cut <- valr::read_bed(sprintf("%s/%s_q30_cut_sites.bed",cut_path,x))
     res <- valr::bed_map(merged_peaks,cut,sum=sum(X4))[4]
@@ -74,8 +75,8 @@ getCount <- function(sample_list, cut_path, peak_path, peak_suffix="_peaks_uniqu
   all_cov <- rlist::list.cbind(coverage)
   colnames(all_cov) <- sample_list
   all_cov[is.na(all_cov)] <- 0
-  all_cov <- all_cov[rowSums(all_cov)!=0, ]
   rownames(all_cov) <- sprintf("%s:%s-%s",merged_peaks$chrom, merged_peaks$start,merged_peaks$end)
+  all_cov <- all_cov[rowSums(all_cov)!=0, ]
   if(!is.na(save_file_path)){
     write.table(all_cov, file=sprintf("%s/ATAC_Counts_Data.tsv",save_file_path), sep='\t',quote=F,col.names=T,row.names=T)
   }
