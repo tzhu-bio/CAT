@@ -81,7 +81,7 @@ getDiffTargetGenes <- function(diff_data, save_path=NA, file_prefix){
   tss <- CATAnno$tss
   target <- valr::bed_closest(peak_summit,tss)
   target$dist_strand <- ifelse(target$strand.y == "+", target$.dist, -(target$.dist))
-  res <- target[,c(1,2,3,4,7,8,11)]
+  res <- target[,c(1,2,3,4,6,8,11)]
   final <- merge(diff_peak, res, by.x = c("chrom","peak_center1","peak_center2"),by.y=c("chrom","start.x","end.x"),all.x=T)
   final_res <- final[,c(1,11,12,4,5,6,7,8,9,10,2,13,14,15,16)]
   colnames(final_res)[11] <- "peak_center"
