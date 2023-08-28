@@ -16,7 +16,7 @@
 ## Comparisons
 ![image](https://github.com/tzhu-bio/CAT/blob/main/png/cat_compare.png)
 ## Workflow
-![image](https://github.com/tzhu-bio/CAT/blob/main/png/workflow.jpg)
+![image](https://github.com/tzhu-bio/CAT/blob/main/png/workflow2.jpg)
 ## Installation
 ``` r
 if (!requireNamespace("devtools", quietly = TRUE))
