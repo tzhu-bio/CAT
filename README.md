@@ -5,7 +5,7 @@
 <img alt="Documentation" src="https://img.shields.io/badge/Documentation%3F-yes-brightgreen.svg?color=3366CC" target="_blank" /></a>
 <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg?color=DC3912" target="_blank" /> </a>
 <img alt="Published" src="https://img.shields.io/badge/Published%3F-yes-green.svg?color=FF9900" target="_blank" /> </a>
-[![Last-changedate](https://img.shields.io/badge/last%20change-2023--08--03-green.svg)](https://github.com/tzhu-bio/CAT/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2023--08--27-green.svg)](https://github.com/tzhu-bio/CAT/commits/master)
 
 ![image](https://github.com/tzhu-bio/CAT/blob/main/png/CAT.png)
 
